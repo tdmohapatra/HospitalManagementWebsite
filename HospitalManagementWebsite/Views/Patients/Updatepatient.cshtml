@@ -1,0 +1,61 @@
+﻿@using HospitalManagementWebsite.Models
+@model PatientViewModel
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Updatepatient</title>
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm())
+        {
+            <table>
+                <tr>
+                    <td>Pid</td>
+                    <td>@Html.TextBoxFor(x => x.pid)</td>
+                </tr>
+                <tr>
+                    <td>FIRST NAME:</td>
+                    <td>
+                        @Html.TextBoxFor(x => x.fname)
+                        @Html.ValidationMessageFor(x => x.fname, "", new { Style = "color:red" })
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>LAST NAME:</td>
+                    <td>
+                        @Html.TextBoxFor(x => x.lname)
+                        @Html.ValidationMessageFor(x => x.lname, "", new { Style = "color:red" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>PATIENT AGE:</td>
+
+                    <td>
+                        @Html.TextBoxFor(x => x.age)
+                        @Html.ValidationMessageFor(x => x.age, "", new { Style = "color:red" })
+
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>BG:/td>
+                    <td>@Html.TextBoxFor(x => x.bg)</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button type="submit">AddPatient</button></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>@Html.ActionLink("Go To Home Page", "GetallPatient")</td>
+                </tr>
+            </table>
+
+        }
+    </div>
+</body>
+</html>

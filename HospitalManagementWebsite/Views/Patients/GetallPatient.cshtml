@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewBag.Title = "All Patients Details";
+}
+
+<h2>GetallPatient</h2>
+<table>
+    <tr>
+        <td>PID </td>
+        <td>FNAME </td>
+        <td>LNAME </td>
+        <td>AGE </td>
+        <td>BLOODGROUP </td>
+    </tr>
+    @foreach (var Items in Model)
+    {
+        <tr>
+            <td>@Items.pid</td>
+            <td>@Items.fname</td>
+            <td>@Items.lname</td>
+            <td>@Items.age</td>
+            <td>@Items.bg</td>
+            <td>@Html.ActionLink("Delete", "DeletePatient", new { id = Items.pid })</td>
+            <td>@Html.ActionLink("Update", "UpdatePatient", new { id = Items.pid })</td>
+        </tr>
+    }
+    <tr>
+        <td></td>
+        <td>@Html.ActionLink("Create", "CreatePatient")</td>
+    </tr>
+</table>

@@ -1,0 +1,67 @@
+﻿@using HospitalManagementWebsite.Models
+@model PatientViewModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CreatePatient</title>
+</head>
+<body>
+    <div>
+        <div>
+            @using (Html.BeginForm())
+            {
+                <table>
+                    <tr>
+                        <td>Pid</td>
+                        <td>@Html.TextBoxFor(x => x.Pid)</td>
+                    </tr>
+                    <tr>
+                        <td>FIRST NAME:</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Fname)
+                            @Html.ValidationMessageFor(x => x.Fname, "", new { Style = "color:red" })
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>LAST NAME:</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Lname)
+                            @Html.ValidationMessageFor(x => x.Lname, "", new { Style = "color:red" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>PATIENT AGE:</td>
+
+                        <td>
+                            @Html.TextBoxFor(x => x.Age)
+                            @Html.ValidationMessageFor(x => x.Age, "", new { Style = "color:red" })
+
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td>BG:</td>
+                        
+                   
+                            <td>@Html.DropDownListFor(x => x.Bg, Model.bbb)</td>
+                        
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><button type="submit">AddPatient</button></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>@Html.ActionLink("Go To Home Page", "GetallPatient")</td>
+                    </tr>
+                </table>
+
+            }
+        </div>
+    </div>
+</body>
+</html>
