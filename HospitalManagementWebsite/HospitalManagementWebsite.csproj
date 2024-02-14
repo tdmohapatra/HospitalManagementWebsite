@@ -121,11 +121,16 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\PatientsController.cs" />
+    <Compile Include="Controllers\TestUiController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BLoodGroup.cs" />
+    <Compile Include="Models\DoctorRegistration.cs" />
+    <Compile Include="Models\DoctorRegistrationModelManager.cs" />
+    <Compile Include="Models\Gender.cs" />
     <Compile Include="Models\Patient.cs" />
     <Compile Include="Models\PatientModelManager.cs" />
     <Compile Include="Models\PatientViewModel.cs" />
@@ -140,6 +145,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Javascript\server.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
@@ -170,6 +176,10 @@
     <Content Include="Views\Patients\GetallPatient.cshtml" />
     <Content Include="Views\Patients\CreatePatient.cshtml" />
     <Content Include="Views\Patients\Updatepatient.cshtml" />
+    <Content Include="Views\Login\DrRegister.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\TestUi\TestUi.cshtml" />
+    <Content Include="Views\TestUi\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

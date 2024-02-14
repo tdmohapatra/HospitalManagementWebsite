@@ -14,8 +14,12 @@ namespace HospitalManagementWebsite.Controllers
         {
             //step1
             PatientModelManager modelManager = new PatientModelManager();
-            List<Patient> patients = modelManager.GetPatients();
+            //List<Patient> patients = modelManager.GetPatients();
+
+            List<Patient> patients = modelManager.GETPATIENT();
+
             //getpatient data is returning list of patient Data
+
 
             return View(patients);
         }
@@ -54,15 +58,45 @@ namespace HospitalManagementWebsite.Controllers
             //create object of the model manager of which return the patient data
             PatientModelManager modelmanager = new PatientModelManager();
             Patient patient = modelmanager.GetPatientById(id);
+            PatientViewModel pvm= new PatientViewModel();
+            pvm.Pid = patient.pid;
+            pvm.Fname = patient.fname;
+            pvm.Lname = patient.lname;
+            pvm.Age = patient.age;
+            pvm.Bg = patient.bg;
+            //added on 2024-02-02
+            pvm.genderId = patient.gender;
+            pvm.email = patient.email;
+            pvm.phoneNo = patient.phoneNo;
 
-            return View(patient);
+
+
+
+
+
+
+
+            return View(pvm);
         }
         [HttpPost]//during Postback request
         public ActionResult Updatepatient(Patient patient)
         {
             //we have to get paticular patient dat as we dont have we have to create a modelmanager for that
             //create object of the model manager of which return the patient data
-            if (ModelState.IsValid)
+
+            //madal validation messege if error occured
+
+            //foreach (var key in ModelState.Keys)
+            //{
+            //    var modelStateEntry = ModelState[key];B
+            //    foreach (var error in modelStateEntry.Errors)
+            //    {
+            //        // Log or inspect the error
+            //        Console.WriteLine($"Validation error for {key}: {error.ErrorMessage}");
+            //    }
+            //}
+
+            if (ModelState.IsValid==true)
             {
                 PatientModelManager modelmanager = new PatientModelManager();
                 int UpdatedRows = modelmanager.UpdatePatient(patient);
@@ -71,7 +105,16 @@ namespace HospitalManagementWebsite.Controllers
                     return RedirectToAction("GetallPatient");
                 }
             }
-            return View(patient);
+            else
+            {
+                PatientModelManager modelmanager = new PatientModelManager();
+                int UpdatedRows = modelmanager.UpdatePatient(patient);
+                if (UpdatedRows > 0)
+                {
+                    return RedirectToAction("GetallPatient");
+                }
+            }
+            return View(patient);   
         }
         public ActionResult DeletePatient(int id)
         {
@@ -83,5 +126,6 @@ namespace HospitalManagementWebsite.Controllers
             }
             return View();
         }
+
     }
 }

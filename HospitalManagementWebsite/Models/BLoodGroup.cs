@@ -10,4 +10,6 @@ namespace HospitalManagementWebsite.Models
         public int Id { get; set; }
         public String Bg { get; set; }
     }
+
+
 }

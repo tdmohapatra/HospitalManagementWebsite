@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -8,13 +9,21 @@ namespace HospitalManagementWebsite.Models
 {
     public class PatientModelManager
     {
+        //ADDED BY TD MOHAPATRA 05-01-24
+        string strcon =   ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
+
+
         //we need 4 methods :GetSllPatient(),CreatePatient(),UpdatePatient(),DeletePatient()
         public List<Patient> GetPatients()
         {
             //return type is list as we will get all the patient details in list format
             //we are going to return all patient data from DB
             //Ado.net code 1-SqlConnection Object
-            SqlConnection connection = new SqlConnection(@"data source=SHAHEB\MSSQLSERVER01;initial catalog=Palle;integrated security=sspi");
+
+            //ADDED BY TD MOHAPATRA--05-01-24
+            SqlConnection connection = new SqlConnection(strcon);
+
+          //  SqlConnection connection = new SqlConnection(@"data source=SHAHEB;initial catalog=TDM;integrated security=sspi");
 
             //step-2 create Sql coāæmmand object
             SqlCommand cmd = new SqlCommand("select * from Patient", connection);
@@ -50,16 +59,31 @@ namespace HospitalManagementWebsite.Models
         //insert Method
         public int CreatePatient(Patient patient)
         {
-            SqlConnection connection = new SqlConnection(@"data source=SHAHEB\MSSQLSERVER01;initial catalog=Palle;integrated security=sspi");
+            //ADDED BY TD MOHAPATRA--05-01-24
+            SqlConnection connection = new SqlConnection(strcon);
+
+            //string cnnString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionStringName"].ConnectionString;
+
+            //SqlConnection cnn = new SqlConnection(connection);
+
+
+
+            //SqlConnection connection = new SqlConnection(@"data source=SHAHEB;initial catalog=TDM;integrated security=sspi;");
+
+            //  SqlConnection connection = new SqlConnection(@"data source=SHAHEB\MSSQLSERVER01;initial catalog=Palle;integrated security=sspi");
             //we have to write sql quiery and save to a string 
 
-            string query = string.Format("insert into patient(pid,fname,lname,age,bg) values('{0}','{1}','{2}','{3}','{4}')", patient.pid, patient.fname, patient.lname, patient.age, patient.bg);
+            //coomented by td mohapatra-2024-02-02
+           // string query = string.Format("insert into patient(fname,lname,age,bg) values('{0}','{1}','{2}','{3}')", patient.fname, patient.lname, patient.age, patient.bg);
 
-            SqlCommand cmd = new SqlCommand(query, connection);
+            string query = string.Format("insert into patient(fname,lname,age,bg,genderId,email,phoneNo) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", patient.fname, patient.lname, patient.age, patient.bg,patient.genderId,patient.email,patient.phoneNo);
+
+
+            SqlCommand cmdd = new SqlCommand(query, connection);
 
             connection.Open();
             //catching no of rows affected
-            int InsertedRow = cmd.ExecuteNonQuery();
+            int InsertedRow = cmdd.ExecuteNonQuery();
             //closing the connection
             connection.Close();
 
@@ -70,10 +94,14 @@ namespace HospitalManagementWebsite.Models
             //return type is list as we will get all the patient details in list format
             //we are going to return all patient data from DB
             //Ado.net code 1-SqlConnection Object
-            SqlConnection connection = new SqlConnection(@"data source=SHAHEB\MSSQLSERVER01;initial catalog=Palle;integrated security=sspi");
+            //  SqlConnection connection = new SqlConnection(@"data source=SHAHEB\MSSQLSERVER01;initial catalog=Palle;integrated security=sspi");
+            SqlConnection connection = new SqlConnection(@"data source=SHAHEB;initial catalog=TDM;integrated security=sspi;");
 
             //step-2 create Sql coāæmmand object
             SqlCommand cmd = new SqlCommand($"select * from Patient where pid={id}", connection);
+
+            //cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            //cmd.CommandText = "GETPATIENTDATABYID";
             //step-3 open connection
             connection.Open();
             //step-4 read the Connection and catch the result in  data reader
@@ -91,19 +119,29 @@ namespace HospitalManagementWebsite.Models
                 patient.lname = sqlDataReader["lname"].ToString();
                 patient.age = Convert.ToInt32(sqlDataReader["age"]);
                 patient.bg = Convert.ToString(sqlDataReader["bg"]);
+                //added on 2024-02-02
+                patient.genderId = Convert.ToString(sqlDataReader["genderId"]);
+                patient.email = Convert.ToString(sqlDataReader["email"]);
+                patient.phoneNo = Convert.ToString(sqlDataReader["phoneNo"]);
+
+
+
             }
             connection.Close();
             //retrun data types
             return patient;
-
+            
         }
         //Update patient Details By ID
         public int UpdatePatient(Patient patient)
         {
-            SqlConnection connection = new SqlConnection(@"data source=SHAHEB\MSSQLSERVER01;initial catalog=Palle;integrated security=sspi");
+            SqlConnection connection = new SqlConnection(@"data source=SHAHEB;initial catalog=TDM;integrated security=sspi");
             //we have to write sql quiery and save to a string 
 
-            string query = string.Format("update Patient set fname='{0}',lname='{1}',age='{2}',bg='{3}' where pid={4}", patient.fname, patient.lname, patient.age, patient.bg, patient.pid);
+            //string query = string.Format("update Patient set fname='{0}',lname='{1}',age='{2}',bg='{3}', where pid={4}", patient.fname, patient.lname, patient.age, patient.bg, patient.pid);
+
+            string query = string.Format("update Patient set fname='{0}',lname='{1}',age='{2}',bg='{3}',genderId='{4}',email='{5}',phoneNo='{6}' where pid={7}", patient.fname, patient.lname, patient.age, patient.bg, patient.genderId, patient.email, patient.phoneNo, patient.pid);
+
 
             SqlCommand cmd = new SqlCommand(query, connection);
 
@@ -118,7 +156,7 @@ namespace HospitalManagementWebsite.Models
         //Delete Operation O
         public int DeletePatient(int pid)
         {
-            SqlConnection connection = new SqlConnection(@"data source=SHAHEB\MSSQLSERVER01;initial catalog=Palle;integrated security=sspi");
+            SqlConnection connection = new SqlConnection(@"data source=SHAHEB;initial catalog=TDM;integrated security=sspi");
             //we have to write sql quiery and save to a string 
 
             string query = string.Format("Delete Patient where pid={0}", pid);
@@ -136,7 +174,7 @@ namespace HospitalManagementWebsite.Models
         }
         public List<BLoodGroup> GetBLoodGroups()
         {
-            SqlConnection connection = new SqlConnection(@"data source=SHAHEB\MSSQLSERVER01;initial catalog=Palle;integrated security=sspi");
+            SqlConnection connection = new SqlConnection(@"data source=SHAHEB;initial catalog=TDM;integrated security=sspi");
             String Qry = "Select * from Bloodgroup";
             SqlCommand cmd = new SqlCommand(Qry,connection);
             connection.Open();
@@ -145,6 +183,14 @@ namespace HospitalManagementWebsite.Models
 
            SqlDataReader sqlDataReader= cmd.ExecuteReader();
               List<BLoodGroup> bLoodGroups= new List<BLoodGroup>();
+
+
+            // Add default option
+            //bLoodGroups.Add(new BLoodGroup
+            //{
+            //    Id = 0, // Assuming 0 as the default ID or set it to an appropriate default value
+            //    Bg = "---SELECT BLOOD GROUP--"
+            //});
             while (sqlDataReader.Read())
             {
                 BLoodGroup bLoodGroup= new BLoodGroup();
@@ -153,6 +199,74 @@ namespace HospitalManagementWebsite.Models
                 bLoodGroups.Add(bLoodGroup);
             }
             return bLoodGroups;
+        }
+        //added by td mohapatra --2024-02-02
+        public List<Gender>GetGenders()
+        {
+            SqlConnection connection = new SqlConnection(strcon);
+            string qry = "select *  from gender ";
+            SqlCommand cmd = new SqlCommand(qry, connection);
+            connection.Open();
+            SqlDataReader sqlDataReader= cmd.ExecuteReader();
+            List<Gender> Lgenders = new List<Gender>();
+            while (sqlDataReader.Read())
+            {
+                Gender GENDER = new Gender();
+                GENDER.gId = Convert.ToInt32(sqlDataReader["gId"]);
+                GENDER.gender = sqlDataReader["gender"].ToString();
+                GENDER.gDesc = sqlDataReader["gDesc"].ToString();
+
+                Lgenders.Add(GENDER);
+            }
+            return Lgenders;
+
+
+        }
+
+        //create method using procedure call
+        public List<Patient> GETPATIENT()
+        
+        {
+            SqlConnection con = new SqlConnection(strcon);
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = con;
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.CommandText = "GETALLPATIENTDATA";
+            //add any parameters the stored procedure might require
+            con.Open();
+            //object getPatient = cmd.ExecuteScalar();
+            SqlDataReader sqlDataReader = cmd.ExecuteReader();
+
+            //create alist object tto store all data comming from table
+            List<Patient> patients = new List<Patient>();
+            //Patient patient = new Patient();
+
+
+
+            while (sqlDataReader.Read())
+            {
+                Patient patient = new Patient();
+                //read data from each column of patient table in DB
+                //Do convertion accroding to data type
+                patient.pid = Convert.ToInt32(sqlDataReader["pid"]);
+                patient.fname = sqlDataReader["fname"].ToString();
+                patient.lname = sqlDataReader["lname"].ToString();
+                patient.age = Convert.ToInt32(sqlDataReader["age"]);
+                patient.bg = Convert.ToString(sqlDataReader["bg"]);
+                patient.gender = Convert.ToString(sqlDataReader["gender"]);
+                patient.phoneNo = Convert.ToString(sqlDataReader["phoneNo"]);
+                patient.email = Convert.ToString(sqlDataReader["email"]);
+
+                //add data into list
+                patients.Add(patient);
+
+
+            }
+            con.Close();
+            //retrun data types
+            return patients;
+
         }
     }
 }

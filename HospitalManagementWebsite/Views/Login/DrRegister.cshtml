@@ -1,0 +1,119 @@
+﻿@using HospitalManagementWebsite.Models
+@model DoctorRegistration
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Doctor Registration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        table {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        td {
+            padding: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            button:hover {
+                background-color: #2980b9;
+            }
+
+        a {
+            display: inline-block;
+            text-decoration: none;
+            color: #3498db;
+            margin-top: 10px;
+        }
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+        .validation-error {
+            color: red;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm())
+        {
+            <table>
+                <tr>
+                    <td>Dr. Id</td>
+                    <td>@Html.TextBoxFor(x => x.Id)</td>
+                </tr>
+                <tr>
+                    <td>Dr. Name:</td>
+                    <td>
+                        @Html.TextBoxFor(x => x.Name)
+                        @Html.ValidationMessageFor(x => x.Name, "", new { @class = "validation-error" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>Dr. Email:</td>
+                    <td>
+                        @Html.TextBoxFor(x => x.Email)
+                        @Html.ValidationMessageFor(x => x.Email, "", new { @class = "validation-error" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>Dr. Password:</td>
+                    <td>
+                        @Html.TextBoxFor(x => x.Password)
+                        @Html.ValidationMessageFor(x => x.Password, "", new { @class = "validation-error" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>Mob:</td>
+                    <td>@Html.TextBoxFor(x => x.Mob)</td>
+                </tr>
+                <tr>
+                    <td><button type="submit">REGISTER</button></td>
+                    <td><a href="@Url.Action("Login", "Login")">Go back to LogIn Page</a></td>
+                </tr>
+            </table>
+        }
+    </div>
+</body>
+</html>

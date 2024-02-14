@@ -1,0 +1,93 @@
+﻿@using HospitalManagementWebsite.Models
+@model DoctorRegistration
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 320px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button[type="submit"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-out;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 14px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+     
+        
+    </style>
+</head>
+<body>
+    <div class="">
+        @using (Html.BeginForm())
+        {
+            <h2 style="text-align: center;">Doctor Login</h2>
+            <div>
+                <label for="Email">Dr. Email:</label><br />
+                @Html.TextBoxFor(x => x.Email, new { id = "Email" })
+                @Html.ValidationMessageFor(x => x.Email, "", new { Style = "color:red" })
+            </div>
+            <div>
+                <label for="Password">Dr. Password:</label><br />
+                @Html.TextBoxFor(x => x.Password, new { type = "password", id = "Password" })
+                @*@Html.ValidationMessageFor(x => x.Password, "", new { Style = "color:red" })*@
+            </div>
+            <div style="margin-top: 20px;">
+                <button type="submit">Login</button>
+            </div>
+            <div style="margin-top: 10px; text-align: center;">
+                @Html.ActionLink("Go to Register Page", "DrRegister")
+            </div>
+        }
+    </div>
+</body>
+</html>

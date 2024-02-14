@@ -2,62 +2,175 @@
 @model PatientViewModel
 
 <!DOCTYPE html>
+@if (Model != null)
+{
+    // Your code to access Model properties
+}
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>CreatePatient</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        div {
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+        }
+
+        td {
+            padding: 15px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            button:hover {
+                background-color: #2980b9;
+            }
+
+        a {
+            text-decoration: none;
+            color: #3498db;
+        }
+
+            a:hover {
+                color: #2980b9;
+            }
+
+        h3 {
+            color: #3498db;
+        }
+
+        .validation-message {
+            color: red;
+        }
+
+        /* Added IDs for styling */
+        #patientDetailsTable {
+            margin-top: 20px;
+        }
+
+        #submitButton {
+            margin-top: 20px;
+        }
+
+        #homePageLink {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <div>
         <div>
             @using (Html.BeginForm())
             {
+                <table id="patientDetailsTable">
+                    <thead>
+                        <tr>
+                            <td>
+                                <h3>PLEASE INSERT PATIENT DETAILS</h3>
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
                 <table>
-                    <tr>
-                        <td>Pid</td>
-                        <td>@Html.TextBoxFor(x => x.Pid)</td>
-                    </tr>
                     <tr>
                         <td>FIRST NAME:</td>
                         <td>
                             @Html.TextBoxFor(x => x.Fname)
-                            @Html.ValidationMessageFor(x => x.Fname, "", new { Style = "color:red" })
-
+                            <br />
+                            <span class="validation-message">@Html.ValidationMessageFor(x => x.Fname)</span>
                         </td>
                     </tr>
                     <tr>
                         <td>LAST NAME:</td>
                         <td>
                             @Html.TextBoxFor(x => x.Lname)
-                            @Html.ValidationMessageFor(x => x.Lname, "", new { Style = "color:red" })
+                            <br />
+                            <span class="validation-message">@Html.ValidationMessageFor(x => x.Lname)</span>
                         </td>
                     </tr>
                     <tr>
                         <td>PATIENT AGE:</td>
-
                         <td>
                             @Html.TextBoxFor(x => x.Age)
-                            @Html.ValidationMessageFor(x => x.Age, "", new { Style = "color:red" })
-
+                            <br />
+                            <span class="validation-message">@Html.ValidationMessageFor(x => x.Age)</span>
                         </td>
-                        
                     </tr>
                     <tr>
                         <td>BG:</td>
-                        
-                   
-                            <td>@Html.DropDownListFor(x => x.Bg, Model.bbb)</td>
-                        
+                        <td>
+                            @Html.DropDownListFor(x => x.Bg, Model.bbb)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>GENDER:</td>
+
+                        <td>@Html.DropDownListFor(x => x.gender, Model.getgenderlist)</td>
+
+
+                    </tr>
+                    <tr>
+                        <td>EMAIL:</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.email)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>PHONENO:</td>
+                        <td>
+                            @Html.TextBoxFor(x => x.phoneNo)
+                        </td>
                     </tr>
                     <tr>
                         <td></td>
-                        <td><button type="submit">AddPatient</button></td>
+                        <td id="submitButton"><button type="submit">Add Patient</button></td>
                     </tr>
                     <tr>
                         <td></td>
-                        <td>@Html.ActionLink("Go To Home Page", "GetallPatient")</td>
+                        <td id="homePageLink">@Html.ActionLink("Go To Home Page", "GetallPatient")</td>
                     </tr>
+                    @*<tr>
+                        <td></td>
+                        <td></td>
+                        // Redirect to action in a different controller
+                        <td>return RedirectToAction("ActionName", "ControllerName");</td>
+                        <td id="cameraPageLink">@Html.ActionLink("Click Photo", "GetallPatient")</td>
+
+
+                    </tr>*@
                 </table>
 
             }
@@ -65,3 +178,91 @@
     </div>
 </body>
 </html>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var fnameInput = document.getElementById('Fname');
+        var lnameInput = document.getElementById('Lname');
+
+        fnameInput.addEventListener('input', function () {
+            validateInput(fnameInput);
+        });
+
+        lnameInput.addEventListener('input', function () {
+            validateInput(lnameInput);
+        });
+
+
+        function validateInput(inputField) {
+            var inputValue = inputField.value;
+
+            // Validate against alphabetic characters only
+            if (!/^[a-zA-Z]*$/.test(inputValue)) {
+                alert('Please enter only alphabetic characters.');
+                inputField.value = '';
+            }
+
+            // Limit the length to 15 characters
+            if (inputValue.length > 15) {
+                alert('Name should not exceed 15 characters.');
+                inputField.value = inputValue.substring(0, 15);
+            }
+        }
+    });
+</script>
+
+
+@*the below validation not allow me to write double digit if less than 5----problem no--v001*@
+
+
+@*<script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ageInput = document.getElementById('Age');
+
+            ageInput.addEventListener('input', function () {
+                var inputValue = ageInput.value;
+
+                // Validate against numeric characters only
+                if (!/^\d+$/.test(inputValue)) {
+                    alert('Please enter a numeric value for age.');
+                    ageInput.value = '';
+                }
+
+                // Ensure age is between 5 and 90
+                var ageValue = parseInt(inputValue, 10);
+                if (isNaN(ageValue) || ageValue < 5 || ageValue > 90) {
+                    alert('Age must be between 5 and 90.');
+                    ageInput.value = '';
+                }
+            });
+        });
+    </script>*@
+
+@*solution for v001*@
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ageInput = document.getElementById('Age');
+
+        ageInput.addEventListener('input', function () {
+            var inputValue = ageInput.value;
+
+            // Validate against numeric characters only (exactly two digits)
+            if (!/^\d{0,2}$/.test(inputValue)) {
+                alert('Please enter a numeric value (up to two digits) between 5 and 90 for age.');
+                ageInput.value = '';
+            }
+
+            // Ensure age is between 0 and 90
+            var ageValue = parseInt(inputValue, 10);
+            if (isNaN(ageValue) || ageValue < 0 || ageValue > 90) {
+                alert('Age must be between 5 and 90.');
+                ageInput.value = '';
+            }
+        });
+    });
+</script>
+
+

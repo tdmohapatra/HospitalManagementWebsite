@@ -5,57 +5,214 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Updatepatient</title>
+    <title>Update Patient</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+            table td {
+                padding: 8px;
+            }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+        .validation-error {
+            color: red;
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        @using (Html.BeginForm())
-        {
-            <table>
-                <tr>
-                    <td>Pid</td>
-                    <td>@Html.TextBoxFor(x => x.pid)</td>
-                </tr>
-                <tr>
-                    <td>FIRST NAME:</td>
-                    <td>
-                        @Html.TextBoxFor(x => x.fname)
-                        @Html.ValidationMessageFor(x => x.fname, "", new { Style = "color:red" })
 
-                    </td>
-                </tr>
-                <tr>
-                    <td>LAST NAME:</td>
-                    <td>
-                        @Html.TextBoxFor(x => x.lname)
-                        @Html.ValidationMessageFor(x => x.lname, "", new { Style = "color:red" })
-                    </td>
-                </tr>
-                <tr>
-                    <td>PATIENT AGE:</td>
+    @using (Html.BeginForm())
+    {
+        <table>
+            <tr>
+                <td>Pid</td>
+                <td>@Html.TextBoxFor(x => x.Pid)</td>
+            </tr>
+            <tr>
+                <td>FIRST NAME:</td>
+                <td>
+                    @Html.TextBoxFor(x => x.Fname)
+                    <span class="validation-message">@Html.ValidationMessageFor(x => x.Fname)</span>
 
-                    <td>
-                        @Html.TextBoxFor(x => x.age)
-                        @Html.ValidationMessageFor(x => x.age, "", new { Style = "color:red" })
 
-                    </td>
+                </td>
+            </tr>
+            <tr>
+                <td>LAST NAME:</td>
+                <td>
+                    @Html.TextBoxFor(x => x.Lname)
+                    <span class="validation-message">@Html.ValidationMessageFor(x => x.Lname)</span>
 
-                </tr>
-                <tr>
-                    <td>BG:/td>
-                    <td>@Html.TextBoxFor(x => x.bg)</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td><button type="submit">AddPatient</button></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>@Html.ActionLink("Go To Home Page", "GetallPatient")</td>
-                </tr>
-            </table>
+                </td>
+            </tr>
+            <tr>
+                <td>PATIENT AGE:</td>
+                <td>
+                    @Html.TextBoxFor(x => x.Age)
+                    <span class="validation-message">@Html.ValidationMessageFor(x => x.Age)</span>
 
-        }
-    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>BG:</td>
+                <td>@Html.DropDownListFor(x => x.Bg, Model.bbb)
+</td>
+            </tr>
+
+            <tr>
+                <td>GENDER:</td>
+                <td>@Html.DropDownListFor(x => x.gender,Model.getgenderlist)</td>
+            </tr>
+            <tr>
+                <td>EMAIL:</td>
+                <td>
+                    @Html.TextBoxFor(x => x.email)
+                                <span class="validation-error" id="emailValidation"></span>
+                            </td>
+
+            </tr>
+            <tr>
+                <td>PHONENO:</td>
+                <td>@Html.TextBoxFor(x => x.phoneNo)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button type="submit" onclick="validateEmail()">UPDATE</button></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>@Html.ActionLink("Go To Home Page", "GetallPatient")</td>
+            </tr>
+        </table>
+    }
 </body>
 </html>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var fnameInput = document.getElementById('Fname');
+        var lnameInput = document.getElementById('Lname');
+
+        fnameInput.addEventListener('input', function () {
+            validateInput(fnameInput);
+        });
+
+        lnameInput.addEventListener('input', function () {
+            validateInput(lnameInput);
+        });
+
+
+
+
+        function validateInput(inputField) {
+            var inputValue = inputField.value;
+
+            // Validate against alphabetic characters only
+            if (!/^[a-zA-Z]*$/.test(inputValue)) {
+                alert('Please enter only alphabetic characters.');
+                inputField.value = '';
+            }
+
+            // Limit the length to 15 characters
+            if (inputValue.length > 15) {
+                alert('Name should not exceed 15 characters.');
+               //-- prompt('Name should not exceed 15 characters.');
+
+                inputField.value = inputValue.substring(0, 15);
+            }
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ageInput = document.getElementById('Age');
+
+        ageInput.addEventListener('input', function () {
+            var inputValue = ageInput.value;
+
+            // Validate against numeric characters only (exactly two digits)
+            if (!/^\d{0,2}$/.test(inputValue)) {
+                alert('Please enter a numeric value (up to two digits) between 5 and 90 for age.');
+                ageInput.value = '';
+            }
+
+            // Ensure age is between 0 and 90
+            var ageValue = parseInt(inputValue, 10);
+            if (isNaN(ageValue) || ageValue < 0 || ageValue > 90) {
+                alert('Age must be between 5 and 90.');
+                ageInput.value = '';
+            }
+        });
+    });
+</script>
+
+
+
+@*<script>
+        function validateEmail() {
+            var emailInput = document.getElementById('email');
+            var emailValidation = document.getElementById('emailValidation');
+
+            // Regular expression for basic email validation
+            var emailRegex = [/^[^\s@]+@[^\s@]+\.[^\s@]+$/];
+
+            // Check if the email is empty or doesn't match the regex
+            if (emailInput.value.trim() === '' || !emailRegex.test(emailInput.value)) {
+                emailValidation.innerHTML = 'Please enter a valid email address.';
+            } else {
+                emailValidation.innerHTML = ''; // Clear previous validation message
+                alert('Email is valid!'); // Replace with your actual logic
+            }
+        }
+</script>*@
