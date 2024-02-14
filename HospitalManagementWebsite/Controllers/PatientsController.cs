@@ -126,6 +126,9 @@ namespace HospitalManagementWebsite.Controllers
             }
             return View();
         }
-
+        public ActionResult opencamera()
+        {
+            return View();
+        }
     }
 }

@@ -180,6 +180,7 @@
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\TestUi\TestUi.cshtml" />
     <Content Include="Views\TestUi\Index.cshtml" />
+    <Content Include="Views\Patients\opencamera.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
