@@ -4,6 +4,7 @@
 <!-- Include jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+
 <style>
     /* Reset Styles */
     body, h2, p {
@@ -37,6 +38,7 @@
         border-collapse: collapse;
         margin-top: 20px;
         background-color: #fff;
+
     }
 
     th, td {
@@ -93,7 +95,8 @@
         border: 1px solid #3498db;
         color: #3498db;
         border-radius: 4px;
-        transition: background-color 0.3s, color 0.3s;
+        transition: background-color 0.5s, color 0.5s;
+        margin-bottom:10px;
     }
 
         .action-links:hover {
@@ -113,7 +116,10 @@
     }
 
         #create-link:hover {
-            background-color: #219d53;
+           /* background-color: #219d53;*/
+           background-color:orangered;
+           font-size:large;
+           font-weight:bold;
         }
 </style>
 <style>
@@ -128,8 +134,22 @@
             font-size: large;
             color: red;
         }
+
     #form1 {
         float: right;
+    }
+
+
+    #HLINE
+    {
+       font-style:normal;
+       font-size:35px;
+       font-weight:bolder;
+       color:dodgerblue;
+       text-align:center;
+       text-transform:uppercase;
+       position:page;
+     
     }
 </style>
 
@@ -138,28 +158,36 @@
 <!-- Your existing HTML and styles -->
 <!-- Your existing HTML and styles -->
 @*<div class="form-outline" data-mdb-input-init>
-    <input type="search" id="form1" class="form-control" placeholder="Type To Search" aria-label="Search" />
-</div>*@
+        <input type="search" id="form1" class="form-control" placeholder="Type To Search" aria-label="Search" />
+    </div>*@
+
+<div id="divCreate"class="col-sm-1">
+    @Html.ActionLink("Create", "CreatePatient", null, new { @id = "create-link", @class = "action-links" })
+</div>
+
+<div class="form-outline col-sm-11" data-mdb-input-init>
+    <input type="search" id="form1" class="form-control" placeholder="Type To Search" aria-label="Search" />    <br />
+
+</div>
 <table class="table" id="AllPatients">
-    <thead>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
+    @*<thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
 
-            <th class="form-outline" data-mdb-input-init>
-                <input type="search" id="form1" class="form-control" placeholder="Type To Search" aria-label="Search" />    <br />
+                <th >
 
-            </th>
+                </th>
 
-        </tr>
-    </thead>
+            </tr>
+        </thead>*@
     <thead>
 
         <tr>
@@ -180,7 +208,7 @@
 
     <tbody class="pagination-row total">
         @foreach (var Items in Model)
-            
+
         {
             <tr>
                 <td id="tdlist">@Items.pid</td>
@@ -200,30 +228,31 @@
     </tbody>
 
     <tfoot>
-        <tr id="trbuttton">
+        @*<tr id="trbuttton">
             <td></td>
-            <td>@Html.ActionLink("Create", "CreatePatient", null, new { @id = "create-link", @class = "action-links" })</td>
+            <td></td>
             <td>
-                <a id="create-link" class="action-links" href="@Url.Action("Login", "Login")">EXIT</a>
             </td>
 
-        </tr>
+        </tr>*@
 
-        <tr id="trbuttton1">
+        @*<tr id="trbuttton1">
             <td colspan="7">
-                <div id="paginationControls">
-                    <!-- Pagination controls will be added dynamically using JavaScript/jQuery -->
-                </div>
-            </td>
-        </tr>
 
-        <tr id="">
-            <td colspan="7">
-                <!-- Any additional footer content goes here -->
-            </td>
-        </tr>
+        </tr>*@
     </tfoot>
 </table>
+
+<div id="paginationControls" class="col-sm-11">
+    <!-- Pagination controls will be added dynamically using JavaScript/jQuery -->
+</div>
+<div id="divExit" class="col-sm-1">
+    <a id="create-link" class="action-links" href="@Url.Action("Login", "Login")">EXIT</a>
+
+</div>
+
+
+           
 
 
 @*pagination working but search bar not working--pg--001*@
@@ -276,47 +305,8 @@
 @*below code i working fine but after typing a letter it breck pagination  format----pg--02*@
 
 <script>
-        $(document).ready(function () {
-            var itemsPerPage = 10;
-            var $rows = $('.pagination-row tr');
-
-            // Hide all rows except the first 'itemsPerPage' rows
-            $rows.slice(itemsPerPage).hide();
-
-            // Calculate total number of pages
-            var totalPages = Math.ceil($rows.length / itemsPerPage);
-
-            // Add pagination controls
-            for (var i = 1; i <= totalPages; i++) {
-                $('#paginationControls').append('<span class="page" data-page="' + i + '">' + i + '</span>');
-            }
-
-            // Handle pagination control click event
-            $('#paginationControls').on('click', '.page', function () {
-                var currentPage = $(this).data('page');
-                var start = (currentPage - 1) * itemsPerPage;
-                var end = start + itemsPerPage;
-
-                // Hide all rows and show only the ones for the current page
-                $rows.hide().slice(start, end).show();
-            });
-
-            // Handle search bar input change event
-            $('#form1').on('input', function () {
-                var searchTerm = $(this).val().toLowerCase();
-
-                $rows.hide().filter(function () {
-                    return $(this).text().toLowerCase().includes(searchTerm);
-                }).show();
-            });
-        });
-    </script>
-
-@*new code for  previeous issue pg--02*@
-
-@*<script>
     $(document).ready(function () {
-        var itemsPerPage = 5;
+        var itemsPerPage = 10;
         var $rows = $('.pagination-row tr');
 
         // Hide all rows except the first 'itemsPerPage' rows
@@ -344,25 +334,64 @@
         $('#form1').on('input', function () {
             var searchTerm = $(this).val().toLowerCase();
 
-            // Filter rows based on the search term
-            var $filteredRows = $rows.filter(function () {
+            $rows.hide().filter(function () {
                 return $(this).text().toLowerCase().includes(searchTerm);
-            });
+            }).show();
+        });
+    });
+</script>
 
-            // Calculate total number of pages for filtered rows
-            var totalFilteredPages = Math.ceil($filteredRows.length / itemsPerPage);
+@*new code for  previeous issue pg--02*@
 
-            // Clear existing pagination controls
-            $('#paginationControls').empty();
+@*<script>
+        $(document).ready(function () {
+            var itemsPerPage = 5;
+            var $rows = $('.pagination-row tr');
 
-            // Add new pagination controls for filtered rows
-            for (var i = 1; i <= totalFilteredPages; i++) {
+            // Hide all rows except the first 'itemsPerPage' rows
+            $rows.slice(itemsPerPage).hide();
+
+            // Calculate total number of pages
+            var totalPages = Math.ceil($rows.length / itemsPerPage);
+
+            // Add pagination controls
+            for (var i = 1; i <= totalPages; i++) {
                 $('#paginationControls').append('<span class="page" data-page="' + i + '">' + i + '</span>');
             }
 
-            // Show the first page of filtered rows
-            $filteredRows.hide().slice(0, itemsPerPage).show();
+            // Handle pagination control click event
+            $('#paginationControls').on('click', '.page', function () {
+                var currentPage = $(this).data('page');
+                var start = (currentPage - 1) * itemsPerPage;
+                var end = start + itemsPerPage;
+
+                // Hide all rows and show only the ones for the current page
+                $rows.hide().slice(start, end).show();
+            });
+
+            // Handle search bar input change event
+            $('#form1').on('input', function () {
+                var searchTerm = $(this).val().toLowerCase();
+
+                // Filter rows based on the search term
+                var $filteredRows = $rows.filter(function () {
+                    return $(this).text().toLowerCase().includes(searchTerm);
+                });
+
+                // Calculate total number of pages for filtered rows
+                var totalFilteredPages = Math.ceil($filteredRows.length / itemsPerPage);
+
+                // Clear existing pagination controls
+                $('#paginationControls').empty();
+
+                // Add new pagination controls for filtered rows
+                for (var i = 1; i <= totalFilteredPages; i++) {
+                    $('#paginationControls').append('<span class="page" data-page="' + i + '">' + i + '</span>');
+                }
+
+                // Show the first page of filtered rows
+                $filteredRows.hide().slice(0, itemsPerPage).show();
+            });
         });
-    });
-</script>*@
+    </script>*@
 
