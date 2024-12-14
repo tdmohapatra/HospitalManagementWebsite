@@ -152,29 +152,13 @@
 </footer>
 
 <script>
-    // Update Date/Time
-    //function updateDateTime() {
-    //    const now = new Date();
-    //    document.getElementById('currentDateTime').textContent = now.toLocaleString();
-    //}
-    //setInterval(updateDateTime, 1000);
-
-    //// Session Timer
-    //let sessionTime = 30 * 60; // 30 minutes in seconds
-    //function updateSessionTimer() {
-    //    const minutes = Math.floor(sessionTime / 60);
-    //    const seconds = sessionTime % 60;
-    //    document.getElementById('sessionTimer').textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-    //    if (sessionTime > 0) sessionTime--;
-    //}
-    //setInterval(updateSessionTimer, 1000);
-
     $(document).ready(function () {
         const rows = $("#patientData tr");
         const rowsPerPage = 5; // Number of rows per page
         let totalPages = Math.ceil(rows.length / rowsPerPage);
         let currentPage = 1;
 
+        // Function to show the current page
         function showPage(page) {
             rows.hide();
             const start = (page - 1) * rowsPerPage;
@@ -185,37 +169,49 @@
             $(`#page-${page}`).addClass("current-page");
         }
 
+        // Function to create pagination
         function createPagination() {
             $("#paginationControls").empty();
-            for (let i = 1; i <= totalPages; i++) {
-                $("#paginationControls").append(
-                    `<span class="page" id="page-${i}" data-page="${i}">${i}</span>`
-                );
-            }
+            const visibleRows = $("#patientData tr:visible").length;
+            totalPages = Math.ceil(visibleRows / rowsPerPage); // Update total pages based on visible rows
 
-            $(".page").click(function () {
-                currentPage = $(this).data("page");
-                showPage(currentPage);
-            });
+            if (totalPages > 0) {
+                for (let i = 1; i <= totalPages; i++) {
+                    $("#paginationControls").append(
+                        `<span class="page" id="page-${i}" data-page="${i}">${i}</span>`
+                    );
+                }
+
+                $(".page").click(function () {
+                    currentPage = $(this).data("page");
+                    showPage(currentPage);
+                });
+            }
         }
 
-
+        // Function to filter rows based on search term
         function filterRows() {
             const searchTerm = $("#searchBox").val().toLowerCase();
-            rows.hide().filter(function () {
-                const rowText = $(this).text().toLowerCase();
-                const patientName = $(this).find("td:nth-child(2)").text().toLowerCase() + " " + $(this).find("td:nth-child(3)").text().toLowerCase();
-                const patientId = $(this).find("td:nth-child(1)").text().toLowerCase();
-                return patientName.includes(searchTerm) || patientId.includes(searchTerm); // Search by name or ID
-            }).show();
 
-            // Update pagination for filtered rows
-            totalPages = Math.ceil($("#patientData tr:visible").length / rowsPerPage);
+            // Start filtering only after 3 characters
+            if (searchTerm.length >= 3) {
+                rows.hide().filter(function () {
+                    const patientName = $(this).find("td:nth-child(2)").text().toLowerCase() + " " + $(this).find("td:nth-child(3)").text().toLowerCase();
+                    const patientId = $(this).find("td:nth-child(1)").text().toLowerCase();
+                    return patientName.includes(searchTerm) || patientId.includes(searchTerm); // Search by name or ID
+                }).show();
+            } else {
+                // Show all rows if less than 3 characters are typed
+                rows.show();
+            }
+
+            // After filtering, reset pagination to the first page
             currentPage = 1;
-            createPagination();
-            showPage(currentPage);
+            createPagination(); // Rebuild the pagination controls based on filtered rows
+            showPage(currentPage); // Show the first page after filtering
         }
 
+        // Trigger filtering when typing in the search box
         $("#searchBox").on("input", filterRows);
 
         // Initialize pagination and display first page
@@ -223,3 +219,5 @@
         showPage(currentPage);
     });
 </script>
+
+

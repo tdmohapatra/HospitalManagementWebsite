@@ -1,5 +1,4 @@
 ﻿using HospitalManagementWebsite.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -107,7 +106,7 @@ namespace HospitalManagementWebsite.Controllers
                 Country = patient.Country,
                 State = patient.State,
                 City = patient.City,
-             
+
                 bloodGroup = modelManager.GetBLoodGroups()?.Select(bg => new SelectListItem
                 {
                     Text = bg.Bg,

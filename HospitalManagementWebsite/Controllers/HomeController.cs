@@ -9,7 +9,7 @@ namespace HospitalManagementWebsite.Controllers
         {
             return View("TDMWELCOMEPAGE");
         }
-      
+
 
         public ActionResult About()
         {
@@ -18,7 +18,7 @@ namespace HospitalManagementWebsite.Controllers
             return View();
         }
 
-    
-      
+
+
     }
 }

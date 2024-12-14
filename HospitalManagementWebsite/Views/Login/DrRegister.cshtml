@@ -6,82 +6,18 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Doctor Registration</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            margin-top: 5%;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /*min-height: 100vh;*/
-        }
 
+
+    <style>
         .reg-container {
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             box-sizing: border-box;
-            margin: 20px;
-        }
-
-        .reg-table {
-            width: 100%;
-        }
-
-        .reg-td {
-            padding: 10px;
-        }
-
-        .reg-input,
-        .reg-file-input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .reg-button {
-            background-color: #3498db;
-            color: #fff;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-        }
-
-        .reg-button:hover {
-            background-color: #2980b9;
-        }
-
-        .reg-link {
-            text-decoration: none;
-            color: #3498db;
-            display: inline-block;
-            margin-top: 10px;
-            text-align: center;
-            width: 100%;
-        }
-
-        .reg-link:hover {
-            text-decoration: underline;
-        }
-
-        .reg-validation-error {
-            color: red;
-            font-size: 12px;
-        }
-
-        .reg-terms-text {
-            font-size: 14px;
+            margin-left: 25%;
         }
 
         .reg-profile-img-preview {
@@ -98,15 +34,25 @@
             display: none;
         }
 
-        .reg-checkbox-group {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 10px;
+        .form-label {
+            font-weight: bold;
         }
 
-        .reg-checkbox-group input {
-            margin-right: 8px;
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group .form-control {
+            flex: 1;
+        }
+
+        .input-group i {
+            margin-right: 10px;
+        }
+
+        .password-container {
+            position: relative;
         }
 
         /* Responsive Styles */
@@ -121,10 +67,6 @@
                 height: 80px;
             }
 
-            .reg-button {
-                padding: 10px;
-            }
-
             .reg-checkbox-group {
                 flex-direction: column;
                 align-items: flex-start;
@@ -136,89 +78,95 @@
     <div class="reg-container">
         @using (Html.BeginForm())
         {
+            <h2 class="text-center mb-4"> Registration</h2>
+
             <!-- Dialog Box -->
             <dialog id="myDialog">
                 <p>Please fill in all the details correctly.</p>
-                <button id="closeBtn">Close</button>
+                <button id="closeBtn" class="btn btn-primary">Close</button>
             </dialog>
 
-            <table class="reg-table">
-                <div>
-                    <h2>REGISTRATION PAGE</h2>
-                </div>
-                <tr>
-                    <td class="reg-td">Id</td>
-                    <td class="reg-td">@Html.TextBoxFor(x => x.Id, new { @class = "reg-input" })</td>
-                </tr>
-                <tr>
-                    <td class="reg-td">Full Name:</td>
-                    <td class="reg-td">
-                        @Html.TextBoxFor(x => x.Name, new { @class = "reg-input" })
-                        @Html.ValidationMessageFor(x => x.Name, "", new { @class = "reg-validation-error" })
-                    </td>
-                </tr>
-                <tr>
-                    <td class="reg-td">Email:</td>
-                    <td class="reg-td">
-                        @Html.TextBoxFor(x => x.Email, new { @class = "reg-input" })
-                        @Html.ValidationMessageFor(x => x.Email, "", new { @class = "reg-validation-error" })
-                    </td>
-                </tr>
-                <tr>
-                    <td class="reg-td">Your Password:</td>
-                    <td class="reg-td">
-                        @Html.TextBoxFor(x => x.Password, new { @class = "reg-input" })
-                        @Html.ValidationMessageFor(x => x.Password, "", new { @class = "reg-validation-error" })
-                    </td>
-                </tr>
-                <tr>
-                    <td class="reg-td">Mob:</td>
-                    <td class="reg-td">@Html.TextBoxFor(x => x.Mob, new { @class = "reg-input" })</td>
-                </tr>
-                <tr>
-                    <td class="reg-td">Department:</td>
-                    <td class="reg-td">
-                        @Html.TextBoxFor(x => x.Department, new { @class = "reg-input" })
-                        @Html.ValidationMessageFor(x => x.Department, "", new { @class = "reg-validation-error" })
-                    </td>
-                </tr>
-                <tr>
-                    <td class="reg-td">Designation:</td>
-                    <td class="reg-td">
-                        <input type="text" class="reg-input" />
-                    </td>
-                </tr>
+            <div class="mb-3 input-group">
+                <label for="Id" class="form-label">ID:</label>
+                <i class="bi bi-person-fill"></i>
+                @Html.TextBoxFor(x => x.Id, new { @class = "form-control" })
+            </div>
 
-                <!-- Profile Photo Field -->
-                <tr>
-                    <td class="reg-td">Profile Photo:</td>
-                    <td class="reg-td">
-                        <input type="file" id="ProfilePhoto" name="ProfilePhoto" class="reg-file-input" accept="image/*" onchange="previewImage()" />
-                        <img id="profile-img-preview" class="reg-profile-img-preview" style="display:none;" />
-                        <div id="error-message" class="reg-error-message"></div>
-                    </td>
-                </tr>
+            <div class="mb-3 input-group">
+                <label for="Name" class="form-label">Full Name:</label>
+                <i class="bi bi-person"></i>
+                @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.Name, "", new { @class = "text-danger" })
+            </div>
 
-                <tr>
-                    <td colspan="2">
-                        <div class="reg-checkbox-group">
-                            <input type="checkbox" id="termsCheckbox" required />
-                            <label for="termsCheckbox" class="reg-terms-text">I agree to the <a href="#">terms and conditions</a>.</label>
-                        </div>
-                    </td>
-                </tr>
+            <div class="mb-3 input-group">
+                <label for="Email" class="form-label">Email:</label>
+                <i class="bi bi-envelope-fill"></i>
+                @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+            </div>
 
-                <tr>
-                    <td colspan="2">
-                        <button type="submit" class="reg-button" onclick="showDialog()">REGISTER</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="text-align: center;">
-                        <a href="@Url.Action("Login", "Login")" class="reg-link">Go back to LogIn Page</a>
-                    </td>
-                </tr>
-            </table>
+            <div class="mb-3 password-container input-group">
+                <label for="Password" class="form-label">Password:</label>
+                <i class="bi bi-lock-fill"></i>
+                @Html.PasswordFor(x => x.Password, new { @class = "form-control", id = "Password" })
+                @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
+                <span id="eye-icon" onclick="togglePasswordVisibility('Password')">
+                    <i class="bi bi-eye"></i>
+                </span>
+            </div>
+
+            <div class="mb-3 password-container input-group">
+                <label for="PasswordRecheck" class="form-label">Recheck Password:</label>
+                <i class="bi bi-lock-fill"></i>
+                <input type="password" id="PasswordRecheck" class="form-control" />
+                <span id="eye-icon-recheck" onclick="togglePasswordVisibility('PasswordRecheck')">
+                    <i class="bi bi-eye"></i>
+                </span>
+                <div id="password-mismatch" class="text-danger" style="display:none;">Passwords do not match.</div>
+            </div>
+
+            <div class="mb-3 input-group">
+                <label for="Mob" class="form-label">Mobile:</label>
+                <i class="bi bi-phone-fill"></i>
+                @Html.TextBoxFor(x => x.Mob, new { @class = "form-control" })
+            </div>
+
+            <div class="mb-3 input-group">
+                <label for="Department" class="form-label">Department:</label>
+                <i class="bi bi-building"></i>
+                @Html.TextBoxFor(x => x.Department, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.Department, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3 input-group">
+                <label for="Designation" class="form-label">Designation:</label>
+                <i class="bi bi-briefcase-fill"></i>
+                <input type="text" class="form-control" />
+            </div>
+
+            <!-- Profile Photo Field -->
+            <div class="mb-3">
+                <label for="ProfilePhoto" class="form-label">Profile Photo:</label>
+                <input type="file" id="ProfilePhoto" name="ProfilePhoto" class="form-control" accept="image/*" onchange="previewImage()" />
+                <img id="profile-img-preview" class="reg-profile-img-preview" style="display:none;" />
+                <div id="error-message" class="reg-error-message"></div>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="termsCheckbox" required />
+                <label class="form-check-label" for="termsCheckbox">I agree to the <a href="#">terms and conditions</a>.</label>
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary btn-block" onclick="showDialog()">REGISTER</button>
+            </div>
+
+            <div class="mb-3 text-center">
+                <a href="@Url.Action("Login", "Login")" class="btn btn-success btn-lg rounded shadow">
+                    <i class="bi bi-arrow-left"></i> Go back to LogIn Page
+                </a>
+            </div>
         }
     </div>
 
@@ -282,6 +230,32 @@
             }
         }
 
+        // Function to toggle password visibility
+        function togglePasswordVisibility(id) {
+            const passwordField = document.getElementById(id);
+            const eyeIcon = document.getElementById(id === "Password" ? "eye-icon" : "eye-icon-recheck");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                eyeIcon.innerHTML = '<i class="bi bi-eye-slash"></i>'; // Change to "eye-slash" icon
+            } else {
+                passwordField.type = "password";
+                eyeIcon.innerHTML = '<i class="bi bi-eye"></i>'; // Change back to "eye" icon
+            }
+        }
+
+        // Function to check if passwords match
+        document.getElementById('PasswordRecheck').addEventListener('input', function () {
+            const password = document.getElementById('Password').value;
+            const recheckPassword = document.getElementById('PasswordRecheck').value;
+            const mismatchMessage = document.getElementById('password-mismatch');
+
+            if (password !== recheckPassword) {
+                mismatchMessage.style.display = 'block';
+            } else {
+                mismatchMessage.style.display = 'none';
+            }
+        });
+
         // Function to show dialog box
         function showDialog() {
             const dialog = document.getElementById('myDialog');
@@ -295,6 +269,6 @@
             dialog.close();
         });
     </script>
-    
+
 </body>
 </html>

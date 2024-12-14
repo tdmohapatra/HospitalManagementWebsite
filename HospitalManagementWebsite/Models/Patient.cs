@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace HospitalManagementWebsite.Models
 {
@@ -20,7 +17,7 @@ namespace HospitalManagementWebsite.Models
         public string lname { get; set; }
         //RangeValidator
         [Range(18, 90, ErrorMessage = "Age Must in Between 18 and 90")]
-       
+
         public int age { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "BG cannot be empty")]
@@ -28,7 +25,7 @@ namespace HospitalManagementWebsite.Models
 
 
         [Required(ErrorMessage = "Gender is required.")]
-         public string gender { get; set; }
+        public string gender { get; set; }
 
         //added by td mohapatra---2024-02-02
         public string genderId { get; set; }

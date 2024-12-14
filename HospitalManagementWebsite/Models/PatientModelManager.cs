@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
 namespace HospitalManagementWebsite.Models
 {
     public class PatientModelManager
     {
         //ADDED BY TD MOHAPATRA 05-01-24
-        string strcon =   ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
+        string strcon = ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
 
 
         //we need 4 methods :GetSllPatient(),CreatePatient(),UpdatePatient(),DeletePatient()
@@ -23,7 +21,7 @@ namespace HospitalManagementWebsite.Models
             //ADDED BY TD MOHAPATRA--05-01-24
             SqlConnection connection = new SqlConnection(strcon);
 
-          //  SqlConnection connection = new SqlConnection(@"data source=SHAHEB;initial catalog=TDM;integrated security=sspi");
+            //  SqlConnection connection = new SqlConnection(@"data source=SHAHEB;initial catalog=TDM;integrated security=sspi");
 
             //step-2 create Sql coāæmmand object
             SqlCommand cmd = new SqlCommand("select * from Patient", connection);
@@ -56,32 +54,7 @@ namespace HospitalManagementWebsite.Models
             //retrun data types
             return patients;
         }
-        //insert Method
-        //public int CreatePatient(Patient patient)
-        //{
-        //    int tdm_genderId = 0;
-        //    //ADDED BY TD MOHAPATRA--05-01-24
-        //    SqlConnection connection = new SqlConnection(strcon);
 
-        //    //coomented by td mohapatra-2024-02-02
-        //   // string query = string.Format("insert into patient(fname,lname,age,bg) values('{0}','{1}','{2}','{3}')", patient.fname, patient.lname, patient.age, patient.bg);
-        //   if(Convert.ToInt16(patient.genderId) >=0)
-        //    {
-        //         tdm_genderId = Convert.ToInt16(patient.gender);
-        //    }
-        //    string query = string.Format("insert into patient(fname,lname,age,bg,genderId,email,phoneNo,Country,State,City,Zipcode) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}',{7},{8},{9},{10})", patient.fname, patient.lname, patient.age, patient.bg, tdm_genderId, patient.email,patient.phoneNo,patient.Country, patient.State, patient.City,patient.Zipcode);
-
-
-        //    SqlCommand cmdd = new SqlCommand(query, connection);
-
-        //    connection.Open();
-        //    //catching no of rows affected
-        //    int InsertedRow = cmdd.ExecuteNonQuery();
-        //    //closing the connection
-        //    connection.Close();
-
-        //    return InsertedRow;
-        //}
 
 
 
@@ -164,7 +137,7 @@ namespace HospitalManagementWebsite.Models
             connection.Close();
             //retrun data types
             return patient;
-            
+
         }
         //Update patient Details By ID
         public int UpdatePatient(Patient patient)
@@ -210,13 +183,13 @@ namespace HospitalManagementWebsite.Models
         {
             SqlConnection connection = new SqlConnection(@"data source=SHAHEB;initial catalog=TDM;integrated security=sspi");
             String Qry = "Select * from Bloodgroup";
-            SqlCommand cmd = new SqlCommand(Qry,connection);
+            SqlCommand cmd = new SqlCommand(Qry, connection);
             connection.Open();
             //list is required to get all data from bloodgroup table
-          
 
-           SqlDataReader sqlDataReader= cmd.ExecuteReader();
-              List<BLoodGroup> bLoodGroups= new List<BLoodGroup>();
+
+            SqlDataReader sqlDataReader = cmd.ExecuteReader();
+            List<BLoodGroup> bLoodGroups = new List<BLoodGroup>();
 
 
             // Add default option
@@ -227,7 +200,7 @@ namespace HospitalManagementWebsite.Models
             //});
             while (sqlDataReader.Read())
             {
-                BLoodGroup bLoodGroup= new BLoodGroup();
+                BLoodGroup bLoodGroup = new BLoodGroup();
                 bLoodGroup.Id = Convert.ToInt32(sqlDataReader["ID"]);
                 bLoodGroup.Bg = sqlDataReader["Bg"].ToString();
                 bLoodGroups.Add(bLoodGroup);
@@ -235,13 +208,13 @@ namespace HospitalManagementWebsite.Models
             return bLoodGroups;
         }
         //added by td mohapatra --2024-02-02
-        public List<Gender>GetGenders()
+        public List<Gender> GetGenders()
         {
             SqlConnection connection = new SqlConnection(strcon);
             string qry = "select *  from gender ";
             SqlCommand cmd = new SqlCommand(qry, connection);
             connection.Open();
-            SqlDataReader sqlDataReader= cmd.ExecuteReader();
+            SqlDataReader sqlDataReader = cmd.ExecuteReader();
             List<Gender> Lgenders = new List<Gender>();
             while (sqlDataReader.Read())
             {
@@ -259,7 +232,7 @@ namespace HospitalManagementWebsite.Models
 
         //create method using procedure call
         public List<Patient> GETPATIENT()
-        
+
         {
             SqlConnection con = new SqlConnection(strcon);
 
