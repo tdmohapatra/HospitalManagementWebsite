@@ -2,131 +2,183 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace HospitalManagementWebsite.Controllers
 {
     public class PatientsController : Controller
     {
+        private readonly PatientModelManager modelManager = new PatientModelManager();
+
         // GET: Patients
         public ViewResult GetallPatient()
         {
-            //step1
-            PatientModelManager modelManager = new PatientModelManager();
-            //List<Patient> patients = modelManager.GetPatients();
-
+            // Fetch the list of patients
             List<Patient> patients = modelManager.GETPATIENT();
-
-            //getpatient data is returning list of patient Data
-
-
             return View(patients);
         }
-        //Insert Operations
+
+        // Insert Operations
         [HttpGet]
         public ViewResult CreatePatient()
         {
-            PatientViewModel patient = new PatientViewModel();
-            //return empty model which will sended to view 
-            //if we dont pass this empty view to View error will occurs
-            return View(patient);
+            var patientViewModel = new PatientViewModel
+            {
+                bloodGroup = modelManager.GetBLoodGroups()?.Select(bg => new SelectListItem
+                {
+                    Text = bg.Bg,
+                    Value = bg.Bg
+                }).ToList(),
+
+                getgenderlist = modelManager.GetGenders()?.Select(g => new SelectListItem
+                {
+                    Text = g.genderId,
+                    Value = g.gId.ToString()
+                }).ToList()
+            };
+
+            return View(patientViewModel);
         }
-        [HttpPost]//attributes
-        public ActionResult CreatePatient(Patient Patient)
+
+        [HttpPost]
+        public ActionResult CreatePatient(PatientViewModel patientViewModel)
         {
-            //we have to give if condition if validation is valid then only these code get executed
             if (ModelState.IsValid)
             {
-                PatientModelManager modelManager = new PatientModelManager();
+                Patient patient = new Patient
+                {
+                    fname = patientViewModel.Fname,
+                    lname = patientViewModel.Lname,
+                    age = patientViewModel.Age,
+                    bg = patientViewModel.Bg,
+                    gender = patientViewModel.genderId,
+                    email = patientViewModel.email,
+                    phoneNo = patientViewModel.phoneNo,
+                    Country = patientViewModel.Country,
+                    State = patientViewModel.State,
+                    City = patientViewModel.City,
+                    Zipcode = patientViewModel.Zipcode
 
-                int InsertedRow = modelManager.CreatePatient(Patient);
+                };
 
-                if (InsertedRow > 0)
+                int insertedRows = modelManager.CreatePatient(patient);
+                if (insertedRows > 0)
                 {
                     return RedirectToAction("GetallPatient");
                 }
+                ModelState.AddModelError("", "An error occurred while saving the patient.");
             }
 
-            return View();
+            // Reload dropdown data in case of validation failure
+            patientViewModel.bloodGroup = modelManager.GetBLoodGroups()?.Select(bg => new SelectListItem
+            {
+                Text = bg.Bg,
+                Value = bg.Bg
+            }).ToList();
+
+            patientViewModel.getgenderlist = modelManager.GetGenders()?.Select(g => new SelectListItem
+            {
+                Text = g.genderId,
+                Value = g.gId.ToString()
+            }).ToList();
+
+            return View(patientViewModel);
         }
-        //This action method will dispaly A Patient details By id inside the Text box in the view page
+
         [HttpGet]
-        public ActionResult Updatepatient(int id)
+        public ActionResult UpdatePatient(int id)
         {
-            //we have to get paticular patient dat as we dont have we have to create a modelmanager for that
-            //create object of the model manager of which return the patient data
-            PatientModelManager modelmanager = new PatientModelManager();
-            Patient patient = modelmanager.GetPatientById(id);
-            PatientViewModel pvm= new PatientViewModel();
-            pvm.Pid = patient.pid;
-            pvm.Fname = patient.fname;
-            pvm.Lname = patient.lname;
-            pvm.Age = patient.age;
-            pvm.Bg = patient.bg;
-            //added on 2024-02-02
-            pvm.genderId = patient.gender;
-            pvm.email = patient.email;
-            pvm.phoneNo = patient.phoneNo;
-
-
-
-
-
-
-
-
-            return View(pvm);
-        }
-        [HttpPost]//during Postback request
-        public ActionResult Updatepatient(Patient patient)
-        {
-            //we have to get paticular patient dat as we dont have we have to create a modelmanager for that
-            //create object of the model manager of which return the patient data
-
-            //madal validation messege if error occured
-
-            //foreach (var key in ModelState.Keys)
-            //{
-            //    var modelStateEntry = ModelState[key];B
-            //    foreach (var error in modelStateEntry.Errors)
-            //    {
-            //        // Log or inspect the error
-            //        Console.WriteLine($"Validation error for {key}: {error.ErrorMessage}");
-            //    }
-            //}
-
-            if (ModelState.IsValid==true)
+            var patient = modelManager.GetPatientById(id);
+            if (patient == null)
             {
-                PatientModelManager modelmanager = new PatientModelManager();
-                int UpdatedRows = modelmanager.UpdatePatient(patient);
-                if (UpdatedRows > 0)
+                return HttpNotFound();
+            }
+
+            var patientViewModel = new PatientViewModel
+            {
+                Pid = patient.pid,
+                Fname = patient.fname,
+                Lname = patient.lname,
+                Age = patient.age,
+                Bg = patient.bg,
+                genderId = patient.gender,
+                email = patient.email,
+                phoneNo = patient.phoneNo,
+                Country = patient.Country,
+                State = patient.State,
+                City = patient.City,
+             
+                bloodGroup = modelManager.GetBLoodGroups()?.Select(bg => new SelectListItem
+                {
+                    Text = bg.Bg,
+                    Value = bg.Bg
+                }).ToList(),
+                getgenderlist = modelManager.GetGenders()?.Select(g => new SelectListItem
+                {
+                    Text = g.genderId,
+                    Value = g.gId.ToString()
+                }).ToList()
+            };
+
+            return View(patientViewModel);
+        }
+
+
+        [HttpPost]
+        public ActionResult UpdatePatient(PatientViewModel patientViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                Patient patient = new Patient
+                {
+                    pid = patientViewModel.Pid,
+                    fname = patientViewModel.Fname,
+                    lname = patientViewModel.Lname,
+                    age = patientViewModel.Age,
+                    bg = patientViewModel.Bg,
+                    gender = patientViewModel.genderId,
+                    email = patientViewModel.email,
+                    phoneNo = patientViewModel.phoneNo
+                };
+
+                int updatedRows = modelManager.UpdatePatient(patient);
+                if (updatedRows > 0)
                 {
                     return RedirectToAction("GetallPatient");
                 }
+
+                ModelState.AddModelError("", "An error occurred while updating the patient.");
             }
-            else
+
+            // Reload dropdown data in case of validation failure
+            patientViewModel.bloodGroup = modelManager.GetBLoodGroups()?.Select(bg => new SelectListItem
             {
-                PatientModelManager modelmanager = new PatientModelManager();
-                int UpdatedRows = modelmanager.UpdatePatient(patient);
-                if (UpdatedRows > 0)
-                {
-                    return RedirectToAction("GetallPatient");
-                }
-            }
-            return View(patient);   
+                Text = bg.Bg,
+                Value = bg.Bg
+            }).ToList();
+
+            patientViewModel.getgenderlist = modelManager.GetGenders()?.Select(g => new SelectListItem
+            {
+                Text = g.genderId,
+                Value = g.gId.ToString()
+            }).ToList();
+
+            return View(patientViewModel);
         }
+
         public ActionResult DeletePatient(int id)
         {
-            PatientModelManager modelManager = new PatientModelManager();
-            int DeletedRows = modelManager.DeletePatient(id);
-            if (DeletedRows > 0)
+            int deletedRows = modelManager.DeletePatient(id);
+            if (deletedRows > 0)
             {
                 return RedirectToAction("GetallPatient");
             }
-            return View();
+
+            ModelState.AddModelError("", "An error occurred while deleting the patient.");
+            return RedirectToAction("GetallPatient");
         }
-        public ActionResult opencamera()
+
+        public ActionResult OpenCamera()
         {
             return View();
         }

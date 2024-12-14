@@ -41,8 +41,10 @@ namespace HospitalManagementWebsite.Models
         //[RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be 10 digits.")]
         public string phoneNo { get; set; }
         //public String flg { get; set; }
-        public String country { get; set; }
-        public String state { get; set; }
+        public String Country { get; set; }
+        public String State { get; set; }
+        public String City { get; set; }
+        public String Zipcode { get; set; }
         public String disease { get; set; }
         //public String gender { get; set; }
 

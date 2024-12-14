@@ -146,8 +146,12 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Javascript\server.js" />
+    <Content Include="Media\Images\hmsprofileImg.jpg" />
+    <Content Include="Media\Images\TDMICON.png" />
+    <Content Include="Media\Images\TDMJNI1.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Media\Documents\TD_MOHAPATRA_F %282%29.pdf" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -181,9 +185,12 @@
     <Content Include="Views\TestUi\TestUi.cshtml" />
     <Content Include="Views\TestUi\Index.cshtml" />
     <Content Include="Views\Patients\opencamera.cshtml" />
+    <Content Include="Views\Home\TDMWELCOMEPAGE.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Media\PatientAttachments\Application\" />
+    <Folder Include="Media\PatientAttachments\Feedback\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

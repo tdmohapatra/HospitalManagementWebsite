@@ -15,37 +15,42 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            overflow: hidden;
+            position: relative;
         }
 
         .container {
-            width: 320px;
-            background-color: #fff;
-            padding: 20px;
+            width: 380px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 0.5s ease-out;
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 0.8s ease-out;
         }
 
         input[type="text"],
         input[type="password"] {
             width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
             box-sizing: border-box;
             border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 16px;
         }
 
         button[type="submit"] {
             width: calc(100% - 20px);
-            padding: 10px;
+            padding: 15px;
             background-color: #007bff;
             color: #fff;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.3s ease-out;
+            font-size: 16px;
         }
 
         button[type="submit"]:hover {
@@ -62,24 +67,90 @@
             text-decoration: underline;
         }
 
-     
-        
+        .checkbox-group {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .scrolling-info {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin-right: 70%;
+            width: 300px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 18px;
+            overflow: hidden;
+            z-index: 0;
+            animation: scrollContent 30s linear infinite;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .scrolling-info span {
+            display: block;
+            padding: 10px 0;
+        }
+
+        @@keyframes scrollContent {
+            from {
+                transform: translateY(100%);
+            }
+
+            to {
+                transform: translateY(-100%);
+            }
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Show/Hide password icon */
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
-    <div class="">
+    <!-- Scrolling Information Section -->
+    <div class="scrolling-info">
+        <span id="quouteId1">"Believe in yourself and all that you are. Know that there is something inside you that is greater than any obstacle." - Christian D. Larson</span>
+        <span id="NewsId1">Latest News: New medical advancements in cancer treatment have been announced today!</span>
+        <span id="quouteId2">"The only limit to our realization of tomorrow is our doubts of today." - Franklin D. Roosevelt</span>
+        <span id="NewsId2">Breaking: The hospital has launched a new telemedicine service for remote consultations.</span>
+    </div>
+
+    <!-- Login Form -->
+    <div class="container">
         @using (Html.BeginForm())
         {
-            <h2 style="text-align: center;">Doctor Login</h2>
+            <h2 style="text-align: center;"> Login</h2>
             <div>
-                <label for="Email">Dr. Email:</label><br />
-                @Html.TextBoxFor(x => x.Email, new { id = "Email" })
+                <label for="Email">User Name:</label><br />
+                @Html.TextBoxFor(x => x.Email, new { placeholder = "Enter your email" ,id = "Email" })
                 @Html.ValidationMessageFor(x => x.Email, "", new { Style = "color:red" })
             </div>
             <div>
-                <label for="Password">Dr. Password:</label><br />
-                @Html.TextBoxFor(x => x.Password, new { type = "password", id = "Password" })
-                @*@Html.ValidationMessageFor(x => x.Password, "", new { Style = "color:red" })*@
+                <label for="Password"> Password:</label><br />
+                <div style="position: relative;">
+                    @Html.TextBoxFor(x => x.Password, new { placeholder = "Enter your password", type = "password", id = "Password" })
+                    <span toggle="#Password" class="fa fa-fw fa-eye toggle-password" id="eye-icon"></span>
+                </div>
+
             </div>
             <div style="margin-top: 20px;">
                 <button type="submit">Login</button>
@@ -88,6 +159,34 @@
                 @Html.ActionLink("Go to Register Page", "DrRegister")
             </div>
         }
+        <div class="checkbox-group">
+            <input type="checkbox" id="stayLoggedIn" />
+            <label for="stayLoggedIn">Stay logged in</label>
+        </div>
     </div>
+
+    <!-- Home Page Link -->
+    <div>
+        <a href="https://localhost:44386/Home/TDMWELCOMEPAGE">Back to Home Page</a>
+    </div>
+
+    <!-- Add this script to toggle password visibility -->
+    <script>
+        document.getElementById("eye-icon").addEventListener("click", function () {
+            var passwordField = document.getElementById("Password");
+            var icon = document.getElementById("eye-icon");
+
+            // Toggle password visibility
+            if (passwordField.type === "password") {
+                passwordField.type = "text"; // Show password
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash"); // Change icon to "eye-slash"
+            } else {
+                passwordField.type = "password"; // Hide password
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye"); // Change icon to "eye"
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,37 +1,43 @@
-﻿@{
-    ViewBag.Title = "All Patients Details";
-}
-<!-- Include jQuery -->
+﻿    @{
+        Layout = "~/Views/Shared/_Layout.cshtml";  // Set the correct path to the layout
+         ViewBag.Title = "All Patients Details with Pagination and Search";
+    }
+
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <style>
-    /* Reset Styles */
-    body, h2, p {
-        margin: 0;
-        padding: 0;
-    }
-
-    /* General Styles */
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background-color: #f4f4f4;
         color: #333;
     }
 
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
+
+
+
+
+    .timer {
+        font-size: 16px;
+        font-weight: bold;
     }
 
-    /* Header Styles */
-    h2 {
-        font-size: 24px;
-        color: #3498db;
+    footer {
+        background-color: #3498db;
+        color: #fff;
+        text-align: center;
+        padding: 10px 20px;
+        margin-top: 20px;
+    }
+
+    #searchBox {
+        padding: 8px;
+        font-size: 16px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
         margin-bottom: 20px;
     }
 
-    /* Table Styles */
     table {
         width: 100%;
         border-collapse: collapse;
@@ -41,7 +47,7 @@
 
     th, td {
         border: 1px solid #ddd;
-        padding: 15px;
+        padding: 10px;
         text-align: left;
     }
 
@@ -51,19 +57,17 @@
         font-weight: bold;
     }
 
-    /* Pagination Styles */
-    #paginationControls {
+    .pagination {
         text-align: center;
-        margin-top: 20px;
+        margin: 20px 0;
     }
 
     .page {
         display: inline-block;
-        padding: 10px 15px;
+        padding: 8px 12px;
         margin: 0 5px;
         background-color: #3498db;
         color: #fff;
-        border: 1px solid #3498db;
         border-radius: 4px;
         cursor: pointer;
         transition: background-color 0.3s;
@@ -77,16 +81,6 @@
         background-color: #297fb8;
     }
 
-    /* Button Styles */
-    #trbutton {
-        border: 2px solid #000;
-        padding: 10px;
-        text-align: left;
-        background-color: yellow;
-        margin-bottom: 20px;
-    }
-
-    /* Action Links Styles */
     .action-links {
         text-decoration: none;
         padding: 5px 10px;
@@ -100,68 +94,15 @@
             background-color: #3498db;
             color: #fff;
         }
-
-    /* Create Link Styles */
-    #create-link {
-        display: inline-block;
-        background-color: #27ae60;
-        color: #fff;
-        padding: 10px 15px;
-        text-decoration: none;
-        border-radius: 4px;
-        transition: background-color 0.3s;
-    }
-
-        #create-link:hover {
-            background-color: #219d53;
-        }
-</style>
-<style>
-    #tdlist {
-        white-space: pre-line;
-        overflow: hidden;
-        transition: background-color 0.9s, font-size 0.3s, color 0.6s;
-    }
-
-        #tdlist:hover {
-            background-color: cadetblue;
-            font-size: large;
-            color: red;
-        }
-    #form1 {
-        float: right;
-    }
 </style>
 
 
-<h2 id="HLINE">GET ALL PATIENT DETAILS</h2>
-<!-- Your existing HTML and styles -->
-<!-- Your existing HTML and styles -->
-@*<div class="form-outline" data-mdb-input-init>
-    <input type="search" id="form1" class="form-control" placeholder="Type To Search" aria-label="Search" />
-</div>*@
-<table class="table" id="AllPatients">
+<h1>All Patients Details</h1>
+
+<input type="text" id="searchBox" placeholder="Search Patients...">
+
+<table id="AllPatients">
     <thead>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-
-            <th class="form-outline" data-mdb-input-init>
-                <input type="search" id="form1" class="form-control" placeholder="Type To Search" aria-label="Search" />    <br />
-
-            </th>
-
-        </tr>
-    </thead>
-    <thead>
-
         <tr>
             <th>PID</th>
             <th>FNAME</th>
@@ -171,198 +112,114 @@
             <th>GENDER</th>
             <th>EMAIL</th>
             <th>PHONE NO</th>
+            <th>LOCATION</th>
+            <th>ATTACHMENT</th>
             <th>DELETE</th>
             <th>UPDATE</th>
-
-
         </tr>
     </thead>
-
-    <tbody class="pagination-row total">
+    <tbody id="patientData">
         @foreach (var Items in Model)
-            
         {
             <tr>
-                <td id="tdlist">@Items.pid</td>
-                <td id="tdlist">@Items.fname</td>
-                <td id="tdlist">@Items.lname</td>
-                <td id="tdlist">@Items.age</td>
-                <td id="tdlist">@Items.bg</td>
-                <td id="tdlist">@Items.gender</td>
-                <td id="tdlist">@Items.email</td>
-                <td id="tdlist">@Items.phoneNo</td>
-
-                <td id="tdlist">@Html.ActionLink("Delete", "DeletePatient", new { id = Items.pid }, new { @class = "action-links" })</td>
-                <td id="tdlist">@Html.ActionLink("Update", "UpdatePatient", new { id = Items.pid }, new { @class = "action-links" })</td>
+                <td>@Items.pid</td>
+                <td>@Items.fname</td>
+                <td>@Items.lname</td>
+                <td>@Items.age</td>
+                <td>@Items.bg</td>
+                <td>@Items.gender</td>
+                <td>@Items.email</td>
+                <td>@Items.phoneNo</td>
+                <td>location</td>
+                <td><a href="" target="_blank">View File</a></td>
+                <td>@Html.ActionLink("Delete", "DeletePatient", new { id = Items.pid }, new { @class = "action-links" })</td>
+                <td>@Html.ActionLink("Update", "UpdatePatient", new { id = Items.pid }, new { @class = "action-links" })</td>
             </tr>
-
         }
     </tbody>
-
-    <tfoot>
-        <tr id="trbuttton">
-            <td></td>
-            <td>@Html.ActionLink("Create", "CreatePatient", null, new { @id = "create-link", @class = "action-links" })</td>
-            <td>
-                <a id="create-link" class="action-links" href="@Url.Action("Login", "Login")">EXIT</a>
-            </td>
-
-        </tr>
-
-        <tr id="trbuttton1">
-            <td colspan="7">
-                <div id="paginationControls">
-                    <!-- Pagination controls will be added dynamically using JavaScript/jQuery -->
-                </div>
-            </td>
-        </tr>
-
-        <tr id="">
-            <td colspan="7">
-                <!-- Any additional footer content goes here -->
-            </td>
-        </tr>
-    </tfoot>
+    <!-- Create Patient Button -->
+    <div class="add-patient-button">
+        <a href="https://localhost:44386/Patients/CreatePatient" class="btn btn-primary">
+            <i class="fas fa-plus-circle"></i> Create Patient
+        </a>
+    </div>
 </table>
 
+<div class="pagination" id="paginationControls"></div>
 
-@*pagination working but search bar not working--pg--001*@
-
-
-@*<script src="jquery-3.7.1.min.js"></script>*@
-@*<script>
-        $(document).ready(function () {
-            var itemsPerPage = 5;
-            var $rows = $('.pagination-row tr');
-
-            // Hide all rows except the first 'itemsPerPage' rows
-            $rows.slice(itemsPerPage).hide();
-
-            // Calculate total number of pages
-            var totalPages = Math.ceil($rows.length / itemsPerPage);
-
-            // Add pagination controls
-            for (var i = 1; i <= totalPages; i++) {
-                $('#paginationControls').append('<span class="page" data-page="' + i + '">' + i + '</span>');
-            }
-
-            // Handle pagination control click event
-            $('#paginationControls').on('click', '.page', function () {
-                var currentPage = $(this).data('page');
-                var start = (currentPage - 1) * itemsPerPage;
-                var end = start + itemsPerPage;
-
-                // Hide all rows and show only the ones for the current page
-                $rows.hide().slice(start, end).show();
-            });
-        });
-
-        //--pagination code
-
-        $('#AllPatients').on('change', '#form1', function () {
-            debugger;
-            var row = $('#AllPatients').closest('tr');
-            var total = 0;
-            $('form1', row).each(function () {
-                total += Number($(this).val());
-            });
-            $('.total', row).text(total);
-        });
-
-    </script>*@
-
-
-
-@*below code i working fine but after typing a letter it breck pagination  format----pg--02*@
+<footer>
+    &copy; 2024 - Hospital Management System
+</footer>
 
 <script>
-        $(document).ready(function () {
-            var itemsPerPage = 10;
-            var $rows = $('.pagination-row tr');
+    // Update Date/Time
+    //function updateDateTime() {
+    //    const now = new Date();
+    //    document.getElementById('currentDateTime').textContent = now.toLocaleString();
+    //}
+    //setInterval(updateDateTime, 1000);
 
-            // Hide all rows except the first 'itemsPerPage' rows
-            $rows.slice(itemsPerPage).hide();
+    //// Session Timer
+    //let sessionTime = 30 * 60; // 30 minutes in seconds
+    //function updateSessionTimer() {
+    //    const minutes = Math.floor(sessionTime / 60);
+    //    const seconds = sessionTime % 60;
+    //    document.getElementById('sessionTimer').textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+    //    if (sessionTime > 0) sessionTime--;
+    //}
+    //setInterval(updateSessionTimer, 1000);
 
-            // Calculate total number of pages
-            var totalPages = Math.ceil($rows.length / itemsPerPage);
-
-            // Add pagination controls
-            for (var i = 1; i <= totalPages; i++) {
-                $('#paginationControls').append('<span class="page" data-page="' + i + '">' + i + '</span>');
-            }
-
-            // Handle pagination control click event
-            $('#paginationControls').on('click', '.page', function () {
-                var currentPage = $(this).data('page');
-                var start = (currentPage - 1) * itemsPerPage;
-                var end = start + itemsPerPage;
-
-                // Hide all rows and show only the ones for the current page
-                $rows.hide().slice(start, end).show();
-            });
-
-            // Handle search bar input change event
-            $('#form1').on('input', function () {
-                var searchTerm = $(this).val().toLowerCase();
-
-                $rows.hide().filter(function () {
-                    return $(this).text().toLowerCase().includes(searchTerm);
-                }).show();
-            });
-        });
-    </script>
-
-@*new code for  previeous issue pg--02*@
-
-@*<script>
     $(document).ready(function () {
-        var itemsPerPage = 5;
-        var $rows = $('.pagination-row tr');
+        const rows = $("#patientData tr");
+        const rowsPerPage = 5; // Number of rows per page
+        let totalPages = Math.ceil(rows.length / rowsPerPage);
+        let currentPage = 1;
 
-        // Hide all rows except the first 'itemsPerPage' rows
-        $rows.slice(itemsPerPage).hide();
+        function showPage(page) {
+            rows.hide();
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            rows.slice(start, end).show();
 
-        // Calculate total number of pages
-        var totalPages = Math.ceil($rows.length / itemsPerPage);
-
-        // Add pagination controls
-        for (var i = 1; i <= totalPages; i++) {
-            $('#paginationControls').append('<span class="page" data-page="' + i + '">' + i + '</span>');
+            $(".page").removeClass("current-page");
+            $(`#page-${page}`).addClass("current-page");
         }
 
-        // Handle pagination control click event
-        $('#paginationControls').on('click', '.page', function () {
-            var currentPage = $(this).data('page');
-            var start = (currentPage - 1) * itemsPerPage;
-            var end = start + itemsPerPage;
-
-            // Hide all rows and show only the ones for the current page
-            $rows.hide().slice(start, end).show();
-        });
-
-        // Handle search bar input change event
-        $('#form1').on('input', function () {
-            var searchTerm = $(this).val().toLowerCase();
-
-            // Filter rows based on the search term
-            var $filteredRows = $rows.filter(function () {
-                return $(this).text().toLowerCase().includes(searchTerm);
-            });
-
-            // Calculate total number of pages for filtered rows
-            var totalFilteredPages = Math.ceil($filteredRows.length / itemsPerPage);
-
-            // Clear existing pagination controls
-            $('#paginationControls').empty();
-
-            // Add new pagination controls for filtered rows
-            for (var i = 1; i <= totalFilteredPages; i++) {
-                $('#paginationControls').append('<span class="page" data-page="' + i + '">' + i + '</span>');
+        function createPagination() {
+            $("#paginationControls").empty();
+            for (let i = 1; i <= totalPages; i++) {
+                $("#paginationControls").append(
+                    `<span class="page" id="page-${i}" data-page="${i}">${i}</span>`
+                );
             }
 
-            // Show the first page of filtered rows
-            $filteredRows.hide().slice(0, itemsPerPage).show();
-        });
-    });
-</script>*@
+            $(".page").click(function () {
+                currentPage = $(this).data("page");
+                showPage(currentPage);
+            });
+        }
 
+
+        function filterRows() {
+            const searchTerm = $("#searchBox").val().toLowerCase();
+            rows.hide().filter(function () {
+                const rowText = $(this).text().toLowerCase();
+                const patientName = $(this).find("td:nth-child(2)").text().toLowerCase() + " " + $(this).find("td:nth-child(3)").text().toLowerCase();
+                const patientId = $(this).find("td:nth-child(1)").text().toLowerCase();
+                return patientName.includes(searchTerm) || patientId.includes(searchTerm); // Search by name or ID
+            }).show();
+
+            // Update pagination for filtered rows
+            totalPages = Math.ceil($("#patientData tr:visible").length / rowsPerPage);
+            currentPage = 1;
+            createPagination();
+            showPage(currentPage);
+        }
+
+        $("#searchBox").on("input", filterRows);
+
+        // Initialize pagination and display first page
+        createPagination();
+        showPage(currentPage);
+    });
+</script>
