@@ -319,8 +319,9 @@
             <div class="tab">
                 ADMINISTRATOR
                 <div class="inner-tabs">
+                    <div class="tab">ORGANOGRAM</div>
                     <div class="tab">REPORTS</div>
-                    <div class="tab">USERS DEIALS</div>
+                    <div class="tab">USERS DETAILS</div>
                 </div>
             </div>
             <div class="tab">
@@ -360,8 +361,8 @@
             document.getElementById('pageLoader').style.display = 'none';
         });
         // Session Timer
-        let sessionTime = 0.5 * 60; // 5 minutes in seconds
-        const resetTime = 0.6 * 60; // Reset time (same as sessionTime)
+        let sessionTime = 5 * 60; // 5 minutes in seconds
+        const resetTime = 6 * 60; // Reset time (same as sessionTime)
         let countdownInterval; // To manage the countdown interval
 
         // Update Date/Time
