@@ -137,6 +137,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InternalUserController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MenuControlController.cs" />
     <Compile Include="Controllers\PatientsController.cs" />
@@ -148,6 +149,10 @@
     <Compile Include="Models\DoctorRegistration.cs" />
     <Compile Include="Models\DoctorRegistrationModelManager.cs" />
     <Compile Include="Models\Gender.cs" />
+    <Compile Include="Models\InternalUser\Department.cs" />
+    <Compile Include="Models\InternalUser\DepartmentModelManager.cs" />
+    <Compile Include="Models\InternalUser\InternalUser.cs" />
+    <Compile Include="Models\InternalUser\InternalUserModelManager.cs" />
     <Compile Include="Models\MenuModel\MenuControl.cs" />
     <Compile Include="Models\MenuModel\MenuControlRepository.cs" />
     <Compile Include="Models\Patient.cs" />
@@ -286,6 +291,8 @@
     <Content Include="Views\MenuControl\Index.cshtml" />
     <Content Include="Views\MenuControl\Create.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\InternalUser\InternalLogin.cshtml" />
+    <Content Include="Views\InternalUser\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

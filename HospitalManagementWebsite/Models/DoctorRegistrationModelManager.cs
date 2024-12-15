@@ -6,7 +6,7 @@ namespace HospitalManagementWebsite.Models
     public class DoctorRegistrationModelManager
     {
         // Connection string to the database
-        private string connectionString = @"data source=SHAHEB;initial catalog=TDM;integrated security=sspi";
+        private readonly string connectionString = @"data source=SHAHEB;initial catalog=TDM;integrated security=sspi";
 
         // Method to get the password hash from the database by email
         public string GetPasswordHashByEmail(string email)
