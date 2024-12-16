@@ -2,266 +2,254 @@
 @model PatientViewModel
 
 <!DOCTYPE html>
-@if (Model != null)
-{
-    // Your code to access Model properties
-}
-
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>CreatePatient</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+        * {
             margin: 0;
             padding: 0;
-        }
-
-        div {
-            margin: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: #fff;
-        }
-
-        td {
-            padding: 15px;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            display: inline-block;
-            border: 1px solid #ccc;
             box-sizing: border-box;
-            border-radius: 4px;
         }
 
-        button {
-            background-color: #3498db;
-            color: #fff;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .form-group {
+            flex: 1 1 45%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            padding: 10px;
             font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
 
-            button:hover {
-                background-color: #2980b9;
-            }
-
-        a {
-            text-decoration: none;
-            color: #3498db;
+        .form-group small {
+            color: red;
+            font-size: 12px;
         }
 
-            a:hover {
-                color: #2980b9;
-            }
-
-        h3 {
-            color: #3498db;
+        .btn-submit {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
         }
 
-        .validation-message {
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+
+        .location-info {
+            margin-top: 20px;
+            font-size: 14px;
             color: red;
         }
 
-        /* Added IDs for styling */
-        #patientDetailsTable {
-            margin-top: 20px;
-        }
-
-        #submitButton {
-            margin-top: 20px;
-        }
-
-        #homePageLink {
-            margin-top: 20px;
+        @@media (max-width: 768px) {
+            .form-group {
+                flex: 1 1 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div>
-        <div>
-            @using (Html.BeginForm())
-            {
-                <table id="patientDetailsTable">
-                    <thead>
-                        <tr>
-                            <td>
-                                <h3>PLEASE INSERT PATIENT DETAILS</h3>
-                            </td>
-                        </tr>
-                    </thead>
-                </table>
-                <table>
-                    <tr>
-                        <td>FIRST NAME:</td>
-                        <td>
-                            @Html.TextBoxFor(x => x.Fname)
-                            <br />
-                            <span class="validation-message">@Html.ValidationMessageFor(x => x.Fname)</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>LAST NAME:</td>
-                        <td>
-                            @Html.TextBoxFor(x => x.Lname)
-                            <br />
-                            <span class="validation-message">@Html.ValidationMessageFor(x => x.Lname)</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>PATIENT AGE:</td>
-                        <td>
-                            @Html.TextBoxFor(x => x.Age)
-                            <br />
-                            <span class="validation-message">@Html.ValidationMessageFor(x => x.Age)</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>BG:</td>
-                        <td>
-                            @Html.DropDownListFor(x => x.Bg, Model.bbb)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>GENDER:</td>
 
-                        <td>@Html.DropDownListFor(x => x.gender, Model.getgenderlist)</td>
+    <div class="container">
+        <h1 style="margin-left:25%">Patient Registration Form</h1>
 
-
-                    </tr>
-                    <tr>
-                        <td>EMAIL:</td>
-                        <td>
-                            @Html.TextBoxFor(x => x.email)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>PHONENO:</td>
-                        <td>
-                            @Html.TextBoxFor(x => x.phoneNo)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td id="submitButton"><button type="submit">Add Patient</button></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td id="homePageLink">@Html.ActionLink("Go To Home Page", "GetallPatient")</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                     
-                        <td id="cameraPageLink">@Html.ActionLink("Click To Add Photo", "opencamera")</td>
-
-
-                    </tr>
-                </table>
-
-            }
+        <div class="form-group">
+            <label for="longitude">Location:<span id="location-icon" title="Fetching location..."></span></label>
         </div>
+
+        @using (Html.BeginForm())
+        {
+            <form enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="Fname">First Name:</label>
+                    @Html.TextBoxFor(x => x.Fname, new { @id = "Fname" })
+                    <small>@Html.ValidationMessageFor(x => x.Fname)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="Lname">Last Name:</label>
+                    @Html.TextBoxFor(x => x.Lname, new { @id = "Lname" })
+                    <small>@Html.ValidationMessageFor(x => x.Lname)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="Age">Age:</label>
+                    @Html.TextBoxFor(x => x.Age, new { @id = "Age" })
+                    <small>@Html.ValidationMessageFor(x => x.Age)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="Bg">Blood Group:</label>
+                    @Html.DropDownListFor(x => x.Bg, Model.bloodGroup, new { @id = "Bg" })
+                </div>
+
+                <div class="form-group">
+                    <label for="genderId">Gender:</label>
+                    @Html.DropDownListFor(x => x.genderId, Model.getgenderlist, new { @id = "genderId" })
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    @Html.TextBoxFor(x => x.email, new { @id = "email" })
+                    <small>@Html.ValidationMessageFor(x => x.email)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneNo">Phone Number:</label>
+                    @Html.TextBoxFor(x => x.phoneNo, new { @id = "phoneNo" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Zipcode">Pin Code:</label>
+                    @Html.TextBoxFor(x => x.Zipcode, new { @id = "Zipcode" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Country">Country:</label>
+                    @Html.TextBoxFor(x => x.Country, new { @id = "Country" })
+                </div>
+
+                <div class="form-group">
+                    <label for="State">State:</label>
+                    @Html.TextBoxFor(x => x.State, new { @id = "State" })
+                </div>
+
+                <div class="form-group">
+                    <label for="City">City:</label>
+                    @Html.TextBoxFor(x => x.City, new { @id = "City" })
+                </div>
+
+                <!-- Attachments Field -->
+                <div class="form-group">
+                    <label for="attachments">Attachments (PDF, Excel, JPG, PNG, JPEG):</label>
+                    <input type="file" name="attachments" id="attachments" onchange="validateFile()" accept=".pdf,.xls,.xlsx,.jpg,.jpeg,.png" />
+                    <small>Max file size: 2MB</small>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group">
+                    <button type="submit" class="btn-submit">Submit</button>
+                </div>
+            </form>
+        }
     </div>
-</body>
-</html>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const locationIcon = document.getElementById('location-icon');
+            const countryInput = document.getElementById('Country');
+            const stateInput = document.getElementById('State');
+            const cityInput = document.getElementById('City');
+            const zipcodeInput = document.getElementById('Zipcode');
 
+            function updateLocationIcon(status, title) {
+                locationIcon.style.display = 'inline-block';
+                locationIcon.style.width = '5px';
+                locationIcon.style.height = '5px';
+                locationIcon.style.borderRadius = '50%';
+                locationIcon.style.marginLeft = '10px';
+                locationIcon.style.cursor = 'pointer';
+                locationIcon.title = title;
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var fnameInput = document.getElementById('Fname');
-        var lnameInput = document.getElementById('Lname');
-
-        fnameInput.addEventListener('input', function () {
-            validateInput(fnameInput);
-        });
-
-        lnameInput.addEventListener('input', function () {
-            validateInput(lnameInput);
-        });
-
-
-        function validateInput(inputField) {
-            var inputValue = inputField.value;
-
-            // Validate against alphabetic characters only
-            if (!/^[a-zA-Z]*$/.test(inputValue)) {
-                alert('Please enter only alphabetic characters.');
-                inputField.value = '';
+                if (status === 'success') {
+                    locationIcon.style.backgroundColor = '#66ff33';
+                } else {
+                    locationIcon.style.backgroundColor = 'red';
+                }
             }
 
-            // Limit the length to 15 characters
-            if (inputValue.length > 15) {
-                alert('Name should not exceed 15 characters.');
-                inputField.value = inputValue.substring(0, 15);
+            if (navigator.geolocation) {
+                if (confirm("Do you allow us to fetch your location?")) {
+                    navigator.geolocation.getCurrentPosition(async (position) => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+
+                        updateLocationIcon('success', `Latitude: ${latitude}, Longitude: ${longitude}`);
+
+                        try {
+                            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                            const data = await response.json();
+
+                            if (data && data.address) {
+                                countryInput.value = data.address.country || "Country not available";
+                                stateInput.value = data.address.state || "State not available";
+                                cityInput.value = data.address.city || data.address.town || "City not available";
+                                zipcodeInput.value = data.address.postcode || "Zip Code not available";
+                            } else {
+                                alert('Address details not found in response.');
+                                updateLocationIcon('error', 'Unable to fetch location details.please provide those details manually.');
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            alert('An error occurred while fetching location details, please provide those details manually.');
+                            updateLocationIcon('error', 'Error fetching location details.');
+                        }
+                    }, (error) => {
+                        console.error(error);
+                        alert('Unable to fetch location.');
+                        updateLocationIcon('error', 'Error: Unable to fetch location.please provide those details manually.');
+                    });
+                }
+            } else {
+                alert('Geolocation is not supported by your browser.please provide those details manually.');
+                updateLocationIcon('error', 'Geolocation not supported.');
+            }
+        });
+    </script>
+
+    <script>
+        function validateFile() {
+            var fileInput = document.getElementById("attachments");
+            var file = fileInput.files[0];
+
+            // Validate file size (2MB max)
+            if (file.size > 2 * 1024 * 1024) { // 2MB
+                alert("File size must be less than 2MB.");
+                fileInput.value = ""; // Clear the file input
+            }
+
+            // Validate file type
+            var allowedExtensions = ['pdf', 'xls', 'xlsx', 'jpg', 'jpeg', 'png'];
+            var fileExtension = file.name.split('.').pop().toLowerCase();
+
+            if (!allowedExtensions.includes(fileExtension)) {
+                alert("Invalid file type. Please upload a PDF, Excel, JPG, PNG, or JPEG file.");
+                fileInput.value = ""; // Clear the file input
             }
         }
-    });
-</script>
+    </script>
 
-
-@*the below validation not allow me to write double digit if less than 5----problem no--v001*@
-
-
-@*<script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var ageInput = document.getElementById('Age');
-
-            ageInput.addEventListener('input', function () {
-                var inputValue = ageInput.value;
-
-                // Validate against numeric characters only
-                if (!/^\d+$/.test(inputValue)) {
-                    alert('Please enter a numeric value for age.');
-                    ageInput.value = '';
-                }
-
-                // Ensure age is between 5 and 90
-                var ageValue = parseInt(inputValue, 10);
-                if (isNaN(ageValue) || ageValue < 5 || ageValue > 90) {
-                    alert('Age must be between 5 and 90.');
-                    ageInput.value = '';
-                }
-            });
-        });
-    </script>*@
-
-@*solution for v001*@
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var ageInput = document.getElementById('Age');
-
-        ageInput.addEventListener('input', function () {
-            var inputValue = ageInput.value;
-
-            // Validate against numeric characters only (exactly two digits)
-            if (!/^\d{0,2}$/.test(inputValue)) {
-                alert('Please enter a numeric value (up to two digits) between 5 and 90 for age.');
-                ageInput.value = '';
-            }
-
-            // Ensure age is between 0 and 90
-            var ageValue = parseInt(inputValue, 10);
-            if (isNaN(ageValue) || ageValue < 0 || ageValue > 90) {
-                alert('Age must be between 5 and 90.');
-                ageInput.value = '';
-            }
-        });
-    });
-</script>
-
-
+</body>
+</html>

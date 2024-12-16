@@ -1,0 +1,142 @@
+﻿@model IEnumerable<HospitalManagementWebsite.Models.MenuModel.MenuControl>
+@using Newtonsoft.Json
+
+<!-- Search and Filter Section -->
+<div class="container mt-5">
+    <div class="row mb-4">
+        <!-- Search Box -->
+        <div class="col-md-6">
+            <input type="text" id="searchBox" class="form-control" placeholder="Search Menu..." />
+        </div>
+        <!-- Department Filter -->
+        <div class="col-md-6">
+            <select id="departmentFilter" class="form-select" onchange="loadData()">
+                <option value="">Select Department</option>
+                @foreach (var department in Model.Select(m => m.DepartmentCode).Distinct())
+                {
+                    <option value="@department">@department</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <!-- Link to Create New Menu -->
+    <div class="mb-4">
+        <a href="@Url.Action("Create", "MenuControl")" class="btn btn-success">Create New Menu</a>
+    </div>
+
+    <!-- Menu Table Section -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Menu Name</th>
+                    <th>Description</th>
+                    <th>Is Active</th>
+                    <th>Created On</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="menuTableBody">
+                @foreach (var menu in Model)
+                {
+                    <tr>
+                        <td>@menu.MenuName</td>
+                        <td>@menu.MenuDescription</td>
+                        <td>@(menu.IsActive ? "Active" : "Inactive")</td>
+                        <td>@menu.CreatedOn.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>
+                            <a href="@Url.Action("Edit", new { id = menu.MenuID })" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="@Url.Action("Delete", new { id = menu.MenuID })" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Section -->
+    <div id="pagination" class="mt-4">
+        <!-- Pagination links will be inserted dynamically here -->
+    </div>
+</div>
+
+<script>
+// Function to filter by department and search query
+function loadData(page = 1) {
+    var department = $('#departmentFilter').val();
+    var searchQuery = $('#searchBox').val().toLowerCase();
+
+    $.ajax({
+        url: '@Url.Action("GetFilteredMenuData", "MenuControl")',
+        type: 'GET',
+        data: {
+            department: department,
+            searchQuery: searchQuery,
+            page: page
+        },
+        success: function(response) {
+            renderTable(response.menuData);
+            renderPagination(response.totalPages, page);
+        }
+    });
+}
+
+// Handle the search box input event
+$('#searchBox').on('input', function () {
+    loadData();
+});
+
+// Function to render the table with filtered data
+function renderTable(data) {
+    var tableBody = $('#menuTableBody');
+    tableBody.empty();
+
+    if (data.length === 0) {
+        tableBody.append('<tr><td colspan="5" class="text-center">No results found</td></tr>');
+    } else {
+        data.forEach(function (menu) {
+            var row = `
+                <tr>
+                    <td>${menu.MenuName}</td>
+                    <td>${menu.MenuDescription}</td>
+                    <td>${menu.IsActive ? "Active" : "Inactive"}</td>
+                    <td>${new Date(menu.CreatedOn).toLocaleString()}</td>
+                    <td>
+                        <a href="/MenuControl/Edit/${menu.MenuID}" class="btn btn-primary btn-sm">Edit</a> |
+                        <a href="/MenuControl/Delete/${menu.MenuID}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            `;
+            tableBody.append(row);
+        });
+    }
+}
+
+// Function to render pagination controls dynamically
+function renderPagination(totalPages, currentPage) {
+    var paginationContainer = $('#pagination');
+    paginationContainer.empty();
+
+    if (totalPages <= 1) return;
+
+    var paginationHtml = '<ul class="pagination justify-content-center">';
+
+    for (var i = 1; i <= totalPages; i++) {
+        var activeClass = (i === currentPage) ? 'active' : '';
+        paginationHtml += `
+            <li class="page-item ${activeClass}">
+                <a class="page-link" href="javascript:void(0);" onclick="loadData(${i})">${i}</a>
+            </li>
+        `;
+    }
+
+    paginationHtml += '</ul>';
+    paginationContainer.html(paginationHtml);
+}
+
+// Initial load
+$(document).ready(function() {
+    loadData();  // Load data on initial page load
+});
+</script>

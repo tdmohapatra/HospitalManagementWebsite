@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
 namespace HospitalManagementWebsite.Models
 {
     public class PatientModelManager
     {
         //ADDED BY TD MOHAPATRA 05-01-24
-        string strcon =   ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
+        string strcon = ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
 
 
         //we need 4 methods :GetSllPatient(),CreatePatient(),UpdatePatient(),DeletePatient()
@@ -23,7 +21,7 @@ namespace HospitalManagementWebsite.Models
             //ADDED BY TD MOHAPATRA--05-01-24
             SqlConnection connection = new SqlConnection(strcon);
 
-          //  SqlConnection connection = new SqlConnection(@"data source=SHAHEB;initial catalog=TDM;integrated security=sspi");
+            //  SqlConnection connection = new SqlConnection(@"data source=SHAHEB;initial catalog=TDM;integrated security=sspi");
 
             //step-2 create Sql coāæmmand object
             SqlCommand cmd = new SqlCommand("select * from Patient", connection);
@@ -56,39 +54,45 @@ namespace HospitalManagementWebsite.Models
             //retrun data types
             return patients;
         }
-        //insert Method
+
+
+
+
         public int CreatePatient(Patient patient)
         {
-            //ADDED BY TD MOHAPATRA--05-01-24
+            int tdm_genderId = 0;
             SqlConnection connection = new SqlConnection(strcon);
 
-            //string cnnString = System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionStringName"].ConnectionString;
+            if (Convert.ToInt16(patient.genderId) >= 0)
+            {
+                tdm_genderId = Convert.ToInt16(patient.gender);
+            }
 
-            //SqlConnection cnn = new SqlConnection(connection);
-
-
-
-            //SqlConnection connection = new SqlConnection(@"data source=SHAHEB;initial catalog=TDM;integrated security=sspi;");
-
-            //  SqlConnection connection = new SqlConnection(@"data source=SHAHEB\MSSQLSERVER01;initial catalog=Palle;integrated security=sspi");
-            //we have to write sql quiery and save to a string 
-
-            //coomented by td mohapatra-2024-02-02
-           // string query = string.Format("insert into patient(fname,lname,age,bg) values('{0}','{1}','{2}','{3}')", patient.fname, patient.lname, patient.age, patient.bg);
-
-            string query = string.Format("insert into patient(fname,lname,age,bg,genderId,email,phoneNo) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", patient.fname, patient.lname, patient.age, patient.bg,patient.genderId,patient.email,patient.phoneNo);
-
+            string query = "INSERT INTO patient (fname, lname, age, bg, genderId, email, phoneNo, Country, State, City, Zipcode) " +
+                           "VALUES (@fname, @lname, @age, @bg, @genderId, @email, @phoneNo, @Country, @State, @City, @Zipcode)";
 
             SqlCommand cmdd = new SqlCommand(query, connection);
 
+            // Add parameters to the command
+            cmdd.Parameters.AddWithValue("@fname", patient.fname);
+            cmdd.Parameters.AddWithValue("@lname", patient.lname);
+            cmdd.Parameters.AddWithValue("@age", patient.age);
+            cmdd.Parameters.AddWithValue("@bg", patient.bg);
+            cmdd.Parameters.AddWithValue("@genderId", tdm_genderId);
+            cmdd.Parameters.AddWithValue("@email", patient.email);
+            cmdd.Parameters.AddWithValue("@phoneNo", patient.phoneNo);
+            cmdd.Parameters.AddWithValue("@Country", patient.Country);
+            cmdd.Parameters.AddWithValue("@State", patient.State);
+            cmdd.Parameters.AddWithValue("@City", patient.City);
+            cmdd.Parameters.AddWithValue("@Zipcode", patient.Zipcode);
+
             connection.Open();
-            //catching no of rows affected
             int InsertedRow = cmdd.ExecuteNonQuery();
-            //closing the connection
             connection.Close();
 
             return InsertedRow;
         }
+
         public Patient GetPatientById(int id)
         {
             //return type is list as we will get all the patient details in list format
@@ -122,7 +126,10 @@ namespace HospitalManagementWebsite.Models
                 //added on 2024-02-02
                 patient.genderId = Convert.ToString(sqlDataReader["genderId"]);
                 patient.email = Convert.ToString(sqlDataReader["email"]);
-                patient.phoneNo = Convert.ToString(sqlDataReader["phoneNo"]);
+                patient.Country = Convert.ToString(sqlDataReader["Country"]);
+                patient.State = Convert.ToString(sqlDataReader["State"]);
+                patient.City = Convert.ToString(sqlDataReader["City"]);
+                patient.Zipcode = Convert.ToString(sqlDataReader["Zipcode"]);
 
 
 
@@ -130,7 +137,7 @@ namespace HospitalManagementWebsite.Models
             connection.Close();
             //retrun data types
             return patient;
-            
+
         }
         //Update patient Details By ID
         public int UpdatePatient(Patient patient)
@@ -159,7 +166,7 @@ namespace HospitalManagementWebsite.Models
             SqlConnection connection = new SqlConnection(@"data source=SHAHEB;initial catalog=TDM;integrated security=sspi");
             //we have to write sql quiery and save to a string 
 
-            string query = string.Format("Delete Patient where pid={0}", pid);
+            string query = string.Format("update Patient set flg='N' where pid={0}", pid);
 
             SqlCommand cmd = new SqlCommand(query, connection);
 
@@ -176,13 +183,13 @@ namespace HospitalManagementWebsite.Models
         {
             SqlConnection connection = new SqlConnection(@"data source=SHAHEB;initial catalog=TDM;integrated security=sspi");
             String Qry = "Select * from Bloodgroup";
-            SqlCommand cmd = new SqlCommand(Qry,connection);
+            SqlCommand cmd = new SqlCommand(Qry, connection);
             connection.Open();
             //list is required to get all data from bloodgroup table
-          
 
-           SqlDataReader sqlDataReader= cmd.ExecuteReader();
-              List<BLoodGroup> bLoodGroups= new List<BLoodGroup>();
+
+            SqlDataReader sqlDataReader = cmd.ExecuteReader();
+            List<BLoodGroup> bLoodGroups = new List<BLoodGroup>();
 
 
             // Add default option
@@ -193,7 +200,7 @@ namespace HospitalManagementWebsite.Models
             //});
             while (sqlDataReader.Read())
             {
-                BLoodGroup bLoodGroup= new BLoodGroup();
+                BLoodGroup bLoodGroup = new BLoodGroup();
                 bLoodGroup.Id = Convert.ToInt32(sqlDataReader["ID"]);
                 bLoodGroup.Bg = sqlDataReader["Bg"].ToString();
                 bLoodGroups.Add(bLoodGroup);
@@ -201,19 +208,19 @@ namespace HospitalManagementWebsite.Models
             return bLoodGroups;
         }
         //added by td mohapatra --2024-02-02
-        public List<Gender>GetGenders()
+        public List<Gender> GetGenders()
         {
             SqlConnection connection = new SqlConnection(strcon);
             string qry = "select *  from gender ";
             SqlCommand cmd = new SqlCommand(qry, connection);
             connection.Open();
-            SqlDataReader sqlDataReader= cmd.ExecuteReader();
+            SqlDataReader sqlDataReader = cmd.ExecuteReader();
             List<Gender> Lgenders = new List<Gender>();
             while (sqlDataReader.Read())
             {
                 Gender GENDER = new Gender();
                 GENDER.gId = Convert.ToInt32(sqlDataReader["gId"]);
-                GENDER.gender = sqlDataReader["gender"].ToString();
+                GENDER.genderId = sqlDataReader["gender"].ToString();
                 GENDER.gDesc = sqlDataReader["gDesc"].ToString();
 
                 Lgenders.Add(GENDER);
@@ -225,7 +232,7 @@ namespace HospitalManagementWebsite.Models
 
         //create method using procedure call
         public List<Patient> GETPATIENT()
-        
+
         {
             SqlConnection con = new SqlConnection(strcon);
 

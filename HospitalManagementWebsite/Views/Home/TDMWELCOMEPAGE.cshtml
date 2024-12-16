@@ -1,0 +1,603 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to My Projects</title>
+    <style>
+        /* General Reset */
+        /* General Reset */
+        /* Basic setup */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: auto; /* Allow the body to expand for scrolling */
+            overflow: auto; /* Enable scrolling */
+            font-family: Arial, sans-serif;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(45deg, #1f1f1f, #141414);
+            /* Removed overflow: hidden */
+        }
+
+        /* Content styling */
+        .content {
+            position: relative;
+            z-index: 1;
+            color: #fff;
+            text-align: center;
+            padding-top: 50vh;
+            font-size: 2rem;
+        }
+
+
+        /* General shape styles */
+        .shape {
+            position: absolute;
+            background-color: rgba(0, 255, 0, 0.6);
+            opacity: 0.8;
+        }
+
+        /* Triangles */
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 60px solid rgba(0, 255, 0, 0.8);
+            animation: rotateTriangle 5s infinite linear;
+        }
+
+        /* Circles */
+        .circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(0, 255, 255, 0.6);
+            animation: scaleCircle 4s ease-in-out infinite;
+        }
+
+        /* Squares */
+        .square {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 0, 255, 0.7);
+            animation: moveSquare 6s linear infinite;
+        }
+
+        /* Rotating Triangle Animation */
+        @@keyframes rotateTriangle {
+            0% {
+                transform: rotate(0deg);
+                top: 20%;
+                left: 10%;
+            }
+
+            50% {
+                transform: rotate(180deg);
+                top: 40%;
+                left: 30%;
+            }
+
+            100% {
+                transform: rotate(360deg);
+                top: 60%;
+                left: 50%;
+            }
+        }
+
+        /* Scaling Circle Animation */
+        @@keyframes scaleCircle {
+            0%, 100% {
+                transform: scale(0.5);
+                top: 10%;
+                left: 20%;
+            }
+
+            50% {
+                transform: scale(1.5);
+                top: 50%;
+                left: 40%;
+            }
+        }
+
+        /* Moving Square Animation */
+        @@keyframes moveSquare {
+            0% {
+                top: 10%;
+                left: 10%;
+            }
+
+            25% {
+                top: 50%;
+                left: 30%;
+            }
+
+            50% {
+                top: 70%;
+                left: 60%;
+            }
+
+            75% {
+                top: 40%;
+                left: 80%;
+            }
+
+            100% {
+                top: 10%;
+                left: 10%;
+            }
+        }
+
+        /* Hover effect to create random deflection of shapes */
+        body:hover .shape {
+            animation: deflectShape 1s ease-in-out forwards;
+        }
+
+        @@keyframes deflectShape {
+            0% {
+                transform: translateX(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateX(30px) rotate(90deg);
+            }
+
+            100% {
+                transform: translateX(-30px) rotate(180deg);
+            }
+        }
+
+
+
+        /* Welcome Section */
+        .welcome {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+            .welcome h1 {
+                font-size: 3rem;
+                color: #00ffcc;
+            }
+
+            .welcome p {
+                font-size: 1.2rem;
+                color: #aaaaaa;
+            }
+
+        /* Profile Section */
+        .profile {
+            text-align: center;
+            margin: 50px auto;
+            max-width: 600px;
+        }
+
+            .profile img {
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+                border: 4px solid #00ffcc;
+            }
+
+            .profile h3 {
+                color: #00ffcc;
+                font-size: 2rem;
+                margin-top: 20px;
+            }
+
+            .profile p {
+                color: #aaaaaa;
+                font-size: 1.2rem;
+            }
+            .profile i {
+                font-size: 1.5em; /* Increase icon size */
+                margin-right: 10px; /* Add space between icon and text */
+                color: #007BFF; /* Optional: change icon color */
+            }
+
+        /* Links Section */
+        .links {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+            .links a {
+                margin: 0 10px;
+                color: #00ffcc;
+                font-size: 1.5rem;
+                text-decoration: none;
+            }
+
+                .links a:hover {
+                    text-decoration: underline;
+                }
+
+            .links img {
+                width: 40px;
+                height: 40px;
+                margin: 5px;
+            }
+
+        /* Resume Section */
+        .resume {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+            .resume iframe {
+                width: 100%;
+                max-width: 600px;
+                height: 400px;
+            }
+
+        /* Message Section */
+        .message-section {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .message-box {
+            width: 80%;
+            max-width: 500px;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .message-btn {
+            padding: 10px 20px;
+            background-color: #00ffcc;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+            .message-btn:hover {
+                background-color: #009f99;
+            }
+
+        /* Slider Section */
+        .slider-container {
+            position: relative;
+            margin: 30px auto;
+            width: 90%;
+            max-width: 1000px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.5s ease;
+            width: 300%;
+        }
+
+        .slide {
+            flex: 0 0 33.33%;
+            text-align: center;
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            transform: scale(0.9);
+        }
+
+            .slide.active {
+                transform: scale(1.1);
+            }
+
+        .slide-overlay {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #ffffff;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        /* Left/Right Arrows */
+        .arrow-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #ffffff;
+            font-size: 2rem;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .arrow-left {
+            left: 10px;
+        }
+
+        .arrow-right {
+            right: 10px;
+        }
+
+        /* Footer Section */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #161b22;
+            color: #888888;
+            font-size: 0.9rem;
+            border-top: 1px solid #333;
+        }
+
+            footer a {
+                color: #00ffcc;
+                text-decoration: none;
+            }
+
+                footer a:hover {
+                    text-decoration: underline;
+                }
+    </style>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Background Animation -->
+    <div class="background"></div>
+
+    <!-- Welcome Section -->
+    <div class="welcome">
+        <h1>Welcome to My Project Hub</h1>
+        <p>Select a project to explore or work on!</p>
+    </div>
+
+    <!-- Profile Section -->
+    <div class="profile">
+        <img src="~/Media/Images/TDMJNI1.jpg" alt="Profile Picture">
+
+        <h3>Tarakanta DasMohapatra</h3>
+        <p>
+            
+            <a href="mailto:tmohapatra111@gmail.com">
+                <i class="fas fa-envelope"></i> tmohapatra111@gmail.com
+            </a>
+        </p>
+        <p>
+            
+            <a href="tel:+918114627876">
+                <i class="fas fa-phone"></i> +91 8114627876
+            </a> 
+            @*<a href="tel:+917787872068">
+                <i class="fas fa-phone"></i> +91 7787872068
+            </a>*@
+        </p>
+        <p>
+            
+            <a href="https://wa.me/8114627876" target="_blank">
+                <i class="fab fa-whatsapp"></i> +91 8114627876
+            </a>
+        </p>
+    </div>
+
+
+    <!-- Social Media Links Section -->
+    <div class="links">
+        <a href="https://www.linkedin.com/in/tarakanta-dasmohapatra-081997/" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" style="width: 40px; height: 40px; margin: 10px;">
+        </a>
+        <a href="https://github.com/tdmohapatra" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" style="width: 40px; height: 40px; margin: 10px;">
+        </a>
+        <a href="https://leetcode.com/tarakanta" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/LeetCode_Logo_1.png" alt="LeetCode" style="width: 40px; height: 40px; margin: 10px;">
+        </a>
+        <a href="https://www.hackerrank.com/tarakanta" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/HackerRank_logo.png" alt="HackerRank" style="width: 40px; height: 40px; margin: 10px;">
+        </a>
+    </div>
+
+
+    <!-- Resume Section -->
+    <div class="resume">
+        <h2 style="color:whitesmoke;">View My Resume</h2>
+
+        <!-- Download Resume Link with Font Awesome Icon -->
+        <!-- Embed Resume PDF in an iframe -->
+        <iframe src="~/Media/Documents/TD_MOHAPATRA_F (2).pdf" frameborder="0" style="width: 100%; max-width: 600px; height: 400px;"></iframe>
+
+        <!-- LinkedIn Profile Link -->
+        @*<div class="social-links">
+                <p>Connect with me on LinkedIn:</p>
+                <a href="https://www.linkedin.com/in/tarakanta-dasmohapatra-081997/" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/06/LinkedIn_Logo_2013-2019.svg" alt="LinkedIn Profile" style="width: 40px; height: 40px;">
+                </a>
+            </div>*@
+        <br /> <a href="~/Media/Documents/TD_MOHAPATRA_F (2).pdf" target="_blank">
+            <i class="fas fa-download"></i>
+        </a>
+    </div>
+
+
+
+    <!-- Message Section -->
+    <div class="message-section">
+        <h2 style="color:whitesmoke;">Send Me a Message</h2>
+        <textarea class="message-box" placeholder="Write your message here..."></textarea><br>
+        <button class="message-btn">Send Message</button>
+    </div>
+
+    <!-- Slider Section -->
+    <div class="slider-container">
+        <div class="slider-wrapper">
+            <!-- Project 1 -->
+            <div class="slide" style="background-image: url('~/Media/Images/hmsprofileImg.jpg');" onclick="window.location.href='https://localhost:44386/Login/Login';">
+                <div class="slide-overlay">
+
+
+                    <div style="display: flex; align-items: center;">
+                        <img src="~/Media/Images/TDMICON.png" height="60px" width="60px"  />
+                        <span>HOSPITAL MANAGEMENT SYSTEM - TDM</span>
+                    </div>
+
+                </div>
+                
+                <img src="~/Media/Images/hmsprofileImg.jpg" alt="Hospital Management System Image" style="max-height: 300px; max-width:100%" />
+            </div>
+
+            <!-- Project 2 -->
+            <div class="slide" style="background-image: url('https://via.placeholder.com/800x300?text=Project+2');" onclick="window.location.href='https://localhost:44386/Login/Project2';">
+                <div class="slide-overlay">E-Commerce Portal</div>
+            </div>
+            <!-- Project 3 -->
+            <div class="slide" style="background-image: url('https://via.placeholder.com/800x300?text=Project+3');" onclick="window.location.href='https://localhost:44386/Login/Project3';">
+                <div class="slide-overlay">Employee Management</div>
+            </div>
+        </div>
+        <!-- Left/Right Arrows -->
+        <button class="arrow-button arrow-left" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="arrow-button arrow-right" onclick="moveSlide(1)">&#10095;</button>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>Designed by Tarakanta DasMohapatra</p>
+        <p>Contact: <a href="mailto:tmohapatra111@gmailcom">tmohapatra111@gmail.com</a> | +91 8114627876</p>
+    </footer>
+
+    @*https://www.mygreatlearning.com/certificate/JMDUBRCJ*@
+    @*https://www.mygreatlearning.com/certificate/XXEQXBIT*@
+
+    <!-- Sound effect for the slider transition -->
+    <audio id="swishSound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+
+    <script>
+        let currentIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const soundEffect = document.getElementById('swishSound');
+
+        // Function to change the slider
+        function updateSlider() {
+            // Remove active classes and set the new center slide
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === currentIndex) {
+                    slide.classList.add('active');
+                }
+            });
+
+            // Move the wrapper to show the current slide in the center
+            const offset = -currentIndex * 33.33;
+            document.querySelector('.slider-wrapper').style.transform = `translateX(${offset}%)`;
+
+            // Play the sound effect on slide change
+            soundEffect.play();
+        }
+
+        // Move the slide left or right
+        function moveSlide(direction) {
+            currentIndex = (currentIndex + direction + totalSlides) % totalSlides;
+            updateSlider();
+        }
+
+        // Automatically update the slider every 5 seconds
+        setInterval(() => {
+            moveSlide(1);
+        }, 20000);
+
+        // Initial slider update
+        updateSlider();
+    </script>
+
+    <script>
+        // Get reference to the background element
+        const background = document.querySelector('.background');
+
+        // Set a limit for the number of shapes to display
+        const maxShapes = 20;
+        let shapesCount = 0; // Keep track of the number of shapes
+
+        // Function to create random geometric shapes
+        function createRandomShape() {
+            // Stop creating new shapes if the limit is reached
+            if (shapesCount >= maxShapes) return;
+
+            const shapeType = Math.random();
+            const shape = document.createElement('div');
+
+            // Decide the shape type (with 5% chance of trapezoid)
+            if (Math.random() < 0.05) {
+                shape.classList.add('shape', 'trapezoid');
+            } else if (shapeType < 0.25) {
+                shape.classList.add('shape', 'triangle');
+            } else if (shapeType < 0.5) {
+                shape.classList.add('shape', 'circle');
+            } else if (shapeType < 0.75) {
+                shape.classList.add('shape', 'square');
+            } else if (shapeType < 0.85) {
+                shape.classList.add('shape', 'rectangle'); // Add rectangle shape
+            }
+
+            // Randomize size and position
+            const size = Math.random() * 30 + 10; // Random size between 20px and 60px
+            shape.style.width = `${size}px`;
+            shape.style.height = `${size}px`;
+            shape.style.top = `${Math.random() * 100}vh`; // Random vertical position
+            shape.style.left = `${Math.random() * 100}vw`; // Random horizontal position
+
+            // For the rectangle shape
+            if (shape.classList.contains('rectangle')) {
+                shape.style.width = `${Math.random() * 80 + 60}px`; // Random width (between 60px and 140px)
+                shape.style.height = `${Math.random() * 40 + 20}px`; // Random height (between 20px and 60px)
+                shape.style.border = '2px solid white'; // White border
+                shape.style.backgroundColor = 'transparent'; // No background color
+            }
+
+            // For the trapezoid shape
+            if (shape.classList.contains('trapezoid')) {
+                shape.style.borderTop = '30px solid transparent';
+                shape.style.borderBottom = '30px solid rgba(0, 255, 0, 0.6)';
+                shape.style.width = `${Math.random() * 40 + 60}px`; // Random width
+                shape.style.height = '40px'; // Trapezoid height
+            }
+
+            // Append the shape to the background
+            background.appendChild(shape);
+
+            // Increment the shapes count
+            shapesCount++;
+
+            // Remove the shape after 5 seconds
+            setTimeout(() => {
+                background.removeChild(shape);
+                shapesCount--; // Decrease the count when a shape is removed
+            }, 5000); // Shape disappears after 5 seconds
+        }
+
+        // Create random shapes every 500ms
+        setInterval(createRandomShape, 500);
+
+    </script>
+</body>
+</html>

@@ -1,93 +1,270 @@
 ﻿@using HospitalManagementWebsite.Models
 @model DoctorRegistration
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
     <style>
+        /* Global Styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
         }
 
         .container {
-            width: 320px;
-            background-color: #fff;
-            padding: 20px;
+            width: 100%;
+            max-width: 600px; /* Main container width */
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px 40px 50px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 0.5s ease-out;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 0.8s ease-out;
         }
 
-        input[type="text"],
-        input[type="password"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 10px;
+        h2 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .scrolling-info {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 80%;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 18px;
+            overflow: hidden;
+            z-index: 0;
+            animation: scrollContent 30s linear infinite;
+            padding: 20px;
             box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
+            margin-right: 60%;
         }
 
-        button[type="submit"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
+            .scrolling-info span {
+                display: block;
+                padding: 10px 0;
+            }
+
+        @@keyframes scrollContent {
+            from {
+                transform: translateY(100%);
+            }
+
+            to {
+                transform: translateY(-100%);
+            }
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .form-control {
+            height: 45px;
+            font-size: 16px;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .btn-block {
+            font-size: 16px;
+            padding: 14px;
+            width: 100%;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
             cursor: pointer;
-            transition: background-color 0.3s ease-out;
+            transition: background-color 0.3s ease;
         }
 
-        button[type="submit"]:hover {
-            background-color: #0056b3;
+            .btn-block:hover {
+                background-color: #0056b3;
+            }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
         }
 
-        a {
-            text-decoration: none;
-            color: #007bff;
-            font-size: 14px;
+            .toggle-password.green {
+                color: green;
+            }
+
+            .toggle-password.red {
+                color: red;
+            }
+
+        /* Form and container responsiveness */
+        @@media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                max-width: 90%;
+            }
+
+            .form-control {
+                font-size: 14px;
+            }
+
+            .btn-block {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .scrolling-info {
+                display: none;
+            }
         }
 
-        a:hover {
-            text-decoration: underline;
-        }
+        @@media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
 
-     
-        
+            .form-control {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .btn-block {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="">
+    <div class="background-pattern"></div>
+
+    <div class="scrolling-info">
+        <span id="quote1">"Believe in yourself and all that you are. Know that there is something inside you that is greater than any obstacle." - Christian D. Larson</span>
+        <span id="news1">Latest News: New medical advancements in cancer treatment have been announced today!</span>
+        <span id="quote2">"The only limit to our realization of tomorrow is our doubts of today." - Franklin D. Roosevelt</span>
+        <span id="news2">Breaking: The hospital has launched a new telemedicine service for remote consultations.</span>
+    </div>
+
+    <div class="container">
         @using (Html.BeginForm())
         {
-            <h2 style="text-align: center;">Doctor Login</h2>
-            <div>
-                <label for="Email">Dr. Email:</label><br />
-                @Html.TextBoxFor(x => x.Email, new { id = "Email" })
-                @Html.ValidationMessageFor(x => x.Email, "", new { Style = "color:red" })
+            <h2 class="text-center">Login</h2>
+            <div class="form-group">
+                <label for="Email">User Name:</label>
+                @Html.TextBoxFor(x => x.Email, new { @class = "form-control", placeholder = "Enter your email", id = "Email" })
+                @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
             </div>
-            <div>
-                <label for="Password">Dr. Password:</label><br />
-                @Html.TextBoxFor(x => x.Password, new { type = "password", id = "Password" })
-                @*@Html.ValidationMessageFor(x => x.Password, "", new { Style = "color:red" })*@
+            <div class="form-group">
+                <label for="Password">Password:</label>
+                <div class="position-relative">
+                    @Html.TextBoxFor(x => x.Password, new { @class = "form-control", placeholder = "Enter your password", type = "password", id = "Password" })
+                    <span toggle="#Password" class="fa fa-fw fa-eye toggle-password" id="eye-icon"></span>
+                </div>
+                @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
             </div>
-            <div style="margin-top: 20px;">
-                <button type="submit">Login</button>
+            <div class="checkbox-group mt-3 form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="stayLoggedIn">
+                <label class="form-check-label" for="stayLoggedIn">Stay logged in</label>
             </div>
-            <div style="margin-top: 10px; text-align: center;">
-                @Html.ActionLink("Go to Register Page", "DrRegister")
+
+            <div class="form-group mt-4">
+                <button type="submit" class="btn-block">Login</button>
+            </div>
+            <div class="mt-3 text-center">
+                <a href="@Url.Action("DrRegister", "Login")" class="btn btn-success d-inline-flex align-items-center">
+                    Go to Register Page
+                    <i class="bi bi-arrow-right ms-2"></i>
+                </a>
             </div>
         }
     </div>
+
+    <div class="mt-3 text-center">
+        <a href="https://localhost:44386/Home/TDMWELCOMEPAGE" class="btn btn-secondary btn-sm rounded shadow">
+            <i class="bi bi-arrow-left"></i> Back to Home Page
+        </a>
+    </div>
+
+    <script>
+        document.getElementById("eye-icon").addEventListener("click", function () {
+            var passwordField = document.getElementById("Password");
+            var icon = document.getElementById("eye-icon");
+
+            // Toggle password visibility
+            if (passwordField.type === "password") {
+                passwordField.type = "text"; // Show password
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash"); // Change icon to "eye-slash"
+            } else {
+                passwordField.type = "password"; // Hide password
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye"); // Change icon to "eye"
+            }
+
+            validatePassword(); // Call to check the password validity
+        });
+
+        function validatePassword() {
+            var passwordField = document.getElementById("Password");
+            var icon = document.getElementById("eye-icon");
+            var passwordValue = passwordField.value.trim();
+
+            // If password is empty or too short, make icon red
+            if (passwordValue === "") {
+                icon.classList.remove("green");
+                icon.classList.add("red"); // Red if empty
+            } else if (passwordValue.length >= 3) {
+                icon.classList.remove("red");
+                icon.classList.add("green"); // Green if password is valid
+            } else {
+                icon.classList.remove("green");
+                icon.classList.add("red"); // Red if password is too short
+            }
+        }
+
+        // Validate on input change
+        document.getElementById("Password").addEventListener("input", validatePassword);
+
+        // Handle form submission for saving user details in session
+        document.querySelector("form").addEventListener("submit", function (event) {
+            var stayLoggedIn = document.getElementById("stayLoggedIn").checked;
+            if (stayLoggedIn) {
+                // Store username and password in session for 1 hour
+                var email = document.getElementById("Email").value;
+                var password = document.getElementById("Password").value;
+                var expires = new Date();
+                expires.setHours(expires.getHours() + 1); // Set expiration time to 1 hour
+
+                // Store username and password in localStorage with expiry time
+                localStorage.setItem('email', email);
+                localStorage.setItem('password', password);
+                localStorage.setItem('expires', expires.toISOString());
+            }
+        });
+    </script>
+
 </body>
 </html>

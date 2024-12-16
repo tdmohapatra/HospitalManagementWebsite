@@ -1,28 +1,814 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TD MOHAPATRA</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <title>@ViewBag.Title - Hospital Management System</title>
 
-    
+    <!-- Link to Bootstrap CSS -->
+    <link href="~/Content/Bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    @{
+        // Using the System.Web.Configuration namespace to access configuration settings
+        string sessionTimeoutString = System.Web.Configuration.WebConfigurationManager.AppSettings["sessionTimeout"];
+        int sessionTimeout = 5; // Default to 5 minutes if the setting is not found
+
+        // If the sessionTimeout setting exists, convert it to an integer
+        if (!string.IsNullOrEmpty(sessionTimeoutString))
+        {
+            int.TryParse(sessionTimeoutString, out sessionTimeout);
+        }
+    }
+
+
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #3498db; /* Header background color */
+            color: white; /* Text color */
+            padding: 5px 20px; /* Adjust padding for more space */
+            display: flex; /* Flexbox layout for the header */
+            justify-content: space-between; /* Distribute items between left and right */
+            align-items: center; /* Vertically center items */
+            position: fixed; /* Keep header fixed at the top */
+            top: 0;
+            width: 100%; /* Full width */
+            z-index: 10; /* Ensure it's above other content */
+            white-space: nowrap; /* Prevent text from wrapping */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Add a shadow for a 3D effect */
+            border-bottom: 3px solid #2980b9; /* Border to add more depth */
+        }
+
+            header .digital-clock {
+                font-family: 'Courier New', Courier, monospace; /* Digital font effect */
+                font-size: 1rem; /* Use rem for font size */
+                padding: 1px 10px;
+                background: transparent;
+                color: #00FF00; /* Green text to mimic a digital clock */
+                border-radius: 5px;
+                box-shadow: 0px 0px 10px #00FF00, 0px 0px 20px rgba(0, 255, 0, 0.5); /* Glow effect */
+                margin-left: auto; /* Pushes the clock to the right */
+                white-space: nowrap; /* Prevents wrapping of the clock text */
+            }
+
+            header h1 {
+                font-size: 24px;
+                margin: 0;
+                text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3), 3px 3px 10px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+            }
+
+        /* Footer Styles */
+        footer {
+            background-color: #3498db;
+            color: white;
+            text-align: center;
+            padding: 8px 20px;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.3); /* Add shadow for 3D effect */
+        }
+
+        /* Main Layout Styles */
+        .main-layout {
+            display: flex;
+            flex-grow: 1;
+            margin-top: 70px; /* Adjust for fixed header */
+            margin-bottom: 40px; /* Adjust for footer */
+        }
+
+        /* Right Sidebar Styles */
+        .right-sidebar {
+            width: 15%; /* Maximum width for the sidebar */
+            background-color: #3498db;
+            color: white;
+            position: fixed;
+            right: 0;
+            top: 70px;
+            bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            z-index: 5;
+            overflow-y: auto;
+            box-shadow: -3px 0px 10px rgba(0, 0, 0, 0.3); /* Shadow for the right sidebar */
+            border-left: 3px solid #2980b9; /* Add border to create depth */
+        }
+
+            .right-sidebar .tab {
+                padding: 10px;
+                margin-bottom: 10px;
+                cursor: pointer;
+                background-color: #2980b9;
+                text-align: center;
+                border-radius: 10px;
+                transition: background 0.1s, box-shadow 0.3s ease-in-out;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Add shadow to make it pop */
+            }
+
+                .right-sidebar .tab:hover {
+                    background-color: #1f6fa6;
+                    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3); /* Increase shadow on hover */
+                }
+
+            .right-sidebar .inner-tabs {
+                display: none;
+                padding-left: 5px;
+            }
+
+            .right-sidebar .tab:hover .inner-tabs {
+                display: block;
+            }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            margin-right: 1%; /* Adjust for right sidebar */
+            padding: 2%;
+            overflow-y: auto;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Shadow for content area */
+            border-radius: 5px; /* Rounded corners for smoothness */
+        }
+
+        /* Toggle Button Styles */
+        .toggle-button {
+            font-size: 1.2rem;
+            margin-right: 1%;
+            font-weight: bold;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-left: 10px;
+            border-radius: 10%;
+            padding: 5px 15px;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* 3D effect for button */
+            transition: transform 0.2s ease-in-out;
+        }
+
+            .toggle-button:hover {
+                transform: translateY(-3px); /* Lift the button on hover */
+                box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.4); /* Deeper shadow on hover */
+            }
+
+        .toggle-buttonS {
+            font-size: 0.8rem;
+            margin-right: 1%;
+            font-weight: bold;
+            margin-left: 5px;
+            border-radius: 10px;
+            color: black;
+            padding: 5px 12px;
+            background-color: #3498db;
+            box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease-in-out;
+        }
+
+            .toggle-buttonS:hover {
+                transform: translateY(-2px); /* Slight lift on hover */
+                box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3); /* Deeper shadow on hover */
+            }
+    </style>
+
+    <style>
+        /* Page Loader Styles */
+        #pageLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2); /* Semi-transparent background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure loader is on top */
+        }
+
+        #loaderContainer {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            background-color: white;
+            border-radius: 10px;
+            border: 10px solid transparent;
+            border-top-color: #3498db; /* Color for top border */
+            animation: borderAnimation 1s infinite linear; /* Border animation */
+        }
+
+            #loaderContainer img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 120px; /* Image size inside the loader */
+            }
+
+        /* Border animation */
+        @@keyframes borderAnimation {
+            0% {
+                border-top-color: #3498db;
+                border-right-color: transparent;
+                border-bottom-color: transparent;
+                border-left-color: transparent;
+            }
+
+            10% {
+                border-top-color: transparent;
+                border-right-color: #3498db;
+                border-bottom-color: transparent;
+                border-left-color: transparent;
+            }
+
+            20% {
+                border-top-color: transparent;
+                border-right-color: #3498db;
+                border-bottom-color: transparent;
+                border-left-color: transparent;
+            }
+
+            35% {
+                border-top-color: transparent;
+                border-right-color: #3498db;
+                border-bottom-color: transparent;
+                border-left-color: transparent;
+            }
+
+            50% {
+                border-top-color: transparent;
+                border-right-color: transparent;
+                border-bottom-color: #3498db;
+                border-left-color: transparent;
+            }
+
+            75% {
+                border-top-color: transparent;
+                border-right-color: transparent;
+                border-bottom-color: transparent;
+                border-left-color: #3498db;
+            }
+
+            100% {
+                border-top-color: #3498db;
+                border-right-color: transparent;
+                border-bottom-color: transparent;
+                border-left-color: transparent;
+            }
+        }
+    </style>
+
+
+    <style>
+        /* 3D Effect for the Heading */
+        .H3d-heading {
+            display: flex;
+            align-items: center;
+            font-size: 40px; /* Adjust the size to be smaller */
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+            color: white; /* Default text color */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3), 3px 3px 10px rgba(0, 0, 0, 0.2), 4px 4px 15px rgba(0, 0, 0, 0.1); /* Subtle default shadow */
+        }
+
+            /* Solid 3D Effect for the "HMS" (white) */
+            .H3d-heading .h,
+            .H3d-heading .m,
+            .H3d-heading .s {
+                color: white;
+                text-shadow: 3px 3px 10px rgba(255, 255, 255, 0.7), /* Light white shadow */
+                6px 6px 20px rgba(255, 255, 255, 0.5), /* Stronger white shadow */
+                10px 10px 30px rgba(255, 255, 255, 0.3); /* Deep white shadow for a more pronounced 3D effect */
+            }
+
+            /* Red "M" Text */
+            .H3d-heading .red-m {
+                color: red;
+                text-shadow: 3px 3px 10px rgba(255, 0, 0, 0.7), /* Red shadow to make "M" pop */
+                6px 6px 15px rgba(255, 0, 0, 0.5), /* Stronger red shadow */
+                10px 10px 25px rgba(255, 0, 0, 0.3); /* Deep red shadow for the 3D effect */
+            }
+
+            /* Green Cap design for "I" */
+            .H3d-heading .cap {
+                position: absolute;
+                top: 2px;
+                left: -508px;
+                right: -30px;
+                height: 11px;
+                background-color: green;
+                border-radius: 50%;
+                transform: rotate(15deg);
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 1.7); /* Shadow to create depth for the cap */
+            }
+
+            /* Style for the Image */
+            .H3d-heading img {
+                margin-right: 10px;
+                width: 50px; /* Resize the icon */
+                height: 50px;
+            }
+    </style>
+
+
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            height: 100%;
+            background-color: #f4f4f4;
+            overflow-y: scroll; /* Enable vertical scrolling */
+        }
+
+        /* Custom Scrollbar */
+        /* The entire scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px; /* Very thin scrollbar */
+            height: 2px; /* For horizontal scrolling (if needed) */
+        }
+
+        /* Scrollbar track (background of the scrollbar) */
+        ::-webkit-scrollbar-track {
+            background: #ffffff; /* White background for the track */
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        /* Scrollbar thumb (the draggable part of the scrollbar) */
+        ::-webkit-scrollbar-thumb {
+            background: green; /* Green color for the thumb */
+            border-radius: 5px; /* Rounded thumb */
+            width: 10px; /* Thumb width */
+            height: 30px; /* Thumb height */
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.7); /* Simple 3D effect with a soft shadow */
+            transition: background-color 0.2s, box-shadow 0.2s ease-in-out;
+        }
+
+            /* Hover effect on the scrollbar thumb */
+            ::-webkit-scrollbar-thumb:hover {
+                background: #008000; /* Darker green when hovered */
+                box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover for the 3D effect */
+            }
+
+        /* Scrollbar button (for up/down arrows on scrollbar) */
+        ::-webkit-scrollbar-button {
+            background: #008000; /* Green background for buttons */
+            border-radius: 50%;
+        }
+
+        /* Optional: Styling for the corner where horizontal and vertical scrollbars meet */
+        ::-webkit-scrollbar-corner {
+            background: #ffffff; /* Same as track for consistency */
+        }
+    </style>
+
+
 </head>
 <body>
-    <div class="container body-content">
-        <header>
-           
-        </header>
-        @RenderBody()
-        <hr />
-        <footer>
-            @*<p>&copy; @DateTime.Now.Year - TD MOHAPATRA</p>*@
-        </footer>
+
+    <!-- Header -->
+    <header>
+        @*<a href="https://localhost:44386/Home/TDMWELCOMEPAGE" style="text-decoration: none;">
+            <h1 class="Hanimated-heading">
+                <img src="~/Media/Images/TDMICON.png" height="50" width="50" style="margin-right: 10px;" />
+                <span class="Htext">Hospital Management System</span>
+            </h1>
+        </a>*@
+        <a href="https://localhost:44386/Home/TDMWELCOMEPAGE" style="text-decoration:none;">
+            <div class="H3d-heading">
+                <img src="~/Media/Images/TDMICON.png" alt="Logo" />
+                <span class="h">H</span>
+                <span class="red-m">M</span> <!-- Red "M" -->
+                <span class="s">S</span>
+         
+   
+                <div class="cap"></div> <!-- Green Cap on "I" -->
+         
+            </div>
+        </a>
+
+        <!-- Settings Button (on the left side) -->
+
+
+        <div class="digital-clock" id="digitalClock">
+            <span id="currentDateTime"></span>
+            <i class="fas fa-clock"></i> <!-- Clock icon from Font Awesome -->
+            <span id="sessionTimer"> 00 : 00</span>
+        </div>
+        <button id="toggleMaster" class="toggle-button">☰</button> <!-- This is the button to toggle the sidebar -->
+    </header>
+
+    <div id="settingsPanel" style="display:none; position: fixed; top: 50px; right: 15%; width: 200px; background-color: #fff;margin-top:10%; border: 2px solid #3498db; padding: 15px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); z-index: 1000;">
+        <h3>Settings</h3>
+        <div>
+            <label>
+                <input type="checkbox" id="toggleSidebar" checked> Show Sidebar
+            </label>
+        </div>
+        <div>
+            <label>
+                <input type="checkbox" id="toggleClock" checked> Show Digital Clock
+            </label>
+        </div>
+        <div>
+            <label>
+                <input type="checkbox" id="toggleTimer" checked> Show Session Timer
+            </label>
+        </div>
+        <div>
+            <label>
+                <input type="checkbox" id="toggleLoader" checked> Show Loader
+            </label>
+        </div>
+        <div>
+            <label>Background Color:</label>
+            <input type="color" id="backgroundColor" value="#f4f4f4">
+        </div>
+        <div>
+            <label>Header Color:</label>
+            <input type="color" id="headerColor" value="#3498db">
+        </div>
+        <div>
+            <label>Footer Color:</label>
+            <input type="color" id="footerColor" value="#2c3e50">
+        </div>
+        <div>
+            <label>Sidebar Color:</label>
+            <input type="color" id="sidebarColor" value="#2c3e50">
+        </div>
+        <div>
+            <label>
+                <input type="checkbox" id="resetSettings"> Reset Settings to Default
+            </label>
+        </div>
+        <div>
+            <button id="saveSettings">Save Settings</button>
+        </div>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Main Content Area -->
+        <div class="main-content">
+            @RenderBody() <!-- This is where page-specific content will be injected -->
+        </div>
+
+        <!-- Right Sidebar (Max 10% width, 10 Tabs) -->
+        <div class="right-sidebar">
+            <div class="tab">
+                PROFILE
+                <div class="inner-tabs">
+                    <div class="tab">USER DETAILS</div>
+                    <div class="tab">WORK LOAD</div>
+                </div>
+            </div>
+            <div class="tab">
+                SEARCH
+                <div class="inner-tabs">
+                    <div class="tab">WARD DETIALS</div>
+                    <div class="tab">PATIENT INFO </div>
+                    <div class="tab">PATIENT DETIALS  </div>
+                </div>
+            </div>
+            <div class="tab">
+                ADMINISTRATOR
+                <div class="inner-tabs">
+                    <div class="tab">ORGANOGRAM</div>
+                    <div class="tab">REPORTS</div>
+                    <div class="tab">USERS DETAILS</div>
+                </div>
+            </div>
+            <div class="tab">
+                SERVICE DESK
+                <div class="inner-tabs">
+                    <div class="tab">RAISE TICKETS</div>
+                    <div class="tab">DASH BOARD</div>
+                </div>
+            </div>
+            <div class="tab">
+                SETTINGS
+                <div class="inner-tabs">
+                    <div class="tab"> <button id="settingsButton" class="toggle-buttonS">   ⚙️ </button></div>
+                </div>
+            </div>
+
+            <!-- Add more tabs as needed -->
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2024 - Hospital Management System
+    </footer>
+    <!-- Page Loader -->
+    <div id="pageLoader">
+        <div id="loaderContainer">
+            @*<img src="your-loader-image.gif" alt="Loading..." />*@ <!-- Replace with your image -->
+            <img src="~/Media/Images/TDMICON.png" alt="Loading..." height="100" width="100" style="margin-right: 10px;" />
+
+        </div>
+    </div>
+
+    <script>
+
+    // Hide the loader when the page is fully loaded
+    window.addEventListener('load', function () {
+        document.getElementById('pageLoader').style.display = 'none';
+    });
+
+    // Retrieve session timeout value from web.config (Razor)
+    var sessionTimeout = @sessionTimeout * 60; // Convert from minutes to seconds
+    const resetTime = sessionTimeout + 60; // Optionally reset time 1 minute after session timeout
+
+    let countdownInterval; // Manage the countdown interval
+
+    // Update Date/Time
+    function updateDateTime() {
+        const now = new Date();
+        document.getElementById('currentDateTime').textContent = now.toLocaleString();
+    }
+    setInterval(updateDateTime, 1000);
+
+    // Update Session Timer
+    function updateSessionTimer() {
+        const minutes = Math.floor(sessionTimeout / 60);
+        const seconds = sessionTimeout % 60;
+        document.getElementById('sessionTimer').textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+
+        if (sessionTimeout > 0) {
+            sessionTimeout--;
+        } else {
+            clearInterval(countdownInterval); // Stop countdown when time is up
+            showLogoutMessage(); // Show logout message
+        }
+
+        // Show countdown in the last 10 seconds
+        if (sessionTimeout === 10) {
+            showCountdownModal(); // Show modal when 10 seconds remain
+        }
+    }
+    setInterval(updateSessionTimer, 1000);
+
+    // Reset the session timeout on mouse movement
+    document.addEventListener('mousemove', function () {
+        sessionTimeout = resetTime;
+        clearCountdown(); // Clear countdown if modal is showing
+    });
+
+    // Function to show the countdown modal
+    function showCountdownModal() {
+        if (document.getElementById('countdownModal')) {
+            return; // Avoid creating multiple modals
+        }
+
+        const modal = document.createElement('div');
+        modal.id = 'countdownModal'; // Set the modal's ID
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        modal.style.display = 'flex';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+        modal.style.zIndex = '1000';
+
+        // Modal content
+        const modalContent = document.createElement('div');
+        modalContent.style.backgroundColor = 'white';
+        modalContent.style.padding = '20px';
+        modalContent.style.borderRadius = '10px';
+        modalContent.style.textAlign = 'center';
+        modalContent.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.25)';
+
+        const message = document.createElement('p');
+        message.textContent = 'Your session is about to expire. Logging out in:';
+        message.style.marginBottom = '20px';
+
+        const countdownDisplay = document.createElement('h1');
+        countdownDisplay.id = 'countdownDisplay';
+        countdownDisplay.textContent = '10'; // Start countdown from 10
+        countdownDisplay.style.fontSize = '48px';
+        countdownDisplay.style.color = 'red';
+
+        modalContent.appendChild(message);
+        modalContent.appendChild(countdownDisplay);
+        modal.appendChild(modalContent);
+
+        document.body.appendChild(modal);
+
+        // Start countdown
+        let countdownValue = 10;
+        countdownInterval = setInterval(() => {
+            countdownValue--;
+            countdownDisplay.textContent = countdownValue;
+
+            if (countdownValue <= 0) {
+                clearInterval(countdownInterval);
+                showLogoutMessage(); // Show logout message when countdown finishes
+            }
+        }, 1000);
+    }
+
+    // Clear countdown and modal
+    function clearCountdown() {
+        clearInterval(countdownInterval);
+        const modal = document.getElementById('countdownModal');
+        if (modal) {
+            modal.remove(); // Remove the modal
+        }
+    }
+
+    // Show Logout Message
+    function showLogoutMessage() {
+        clearCountdown(); // Clear countdown modal if it's showing
+
+        const modal = document.createElement('div');
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        modal.style.display = 'flex';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+        modal.style.zIndex = '1000';
+
+        const modalContent = document.createElement('div');
+        modalContent.style.backgroundColor = 'white';
+        modalContent.style.padding = '20px';
+        modalContent.style.borderRadius = '10px';
+        modalContent.style.textAlign = 'center';
+        modalContent.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.25)';
+
+        const message = document.createElement('p');
+        message.textContent = 'Your session has expired. Please log in again.';
+        message.style.marginBottom = '20px';
+
+        const okButton = document.createElement('button');
+        okButton.textContent = 'OK';
+        okButton.style.padding = '10px 20px';
+        okButton.style.border = 'none';
+        okButton.style.backgroundColor = '#3498db';
+        okButton.style.color = 'white';
+        okButton.style.borderRadius = '5px';
+        okButton.style.cursor = 'pointer';
+
+        // Redirect to login page on button click
+        okButton.addEventListener('click', function () {
+            window.location.href = '/Login/Login'; // Redirect to login page (update with your path)
+        });
+
+        modalContent.appendChild(message);
+        modalContent.appendChild(okButton);
+        modal.appendChild(modalContent);
+
+        document.body.appendChild(modal);
+    }
+
+    // Sidebar toggle button logic
+    const toggleButton = document.getElementById('toggleMaster');
+    const rightSidebar = document.querySelector('.right-sidebar');
+
+    toggleButton.addEventListener('click', function () {
+        if (rightSidebar.style.display === 'none' || rightSidebar.style.display === '') {
+            rightSidebar.style.display = 'flex'; // Show sidebar
+        } else {
+            rightSidebar.style.display = 'none'; // Hide sidebar
+        }
+    });
+
+    </script>
+
+    <script>
+        // Function to load settings from localStorage
+        function loadSettings() {
+            const isSidebarVisible = localStorage.getItem('sidebarVisible') === 'true';
+            const isClockVisible = localStorage.getItem('clockVisible') === 'true';
+            const isTimerVisible = localStorage.getItem('timerVisible') === 'true';
+            const pageColor = localStorage.getItem('pageColor') || '#f4f4f4'; // Default to light grey if no value saved
+            const headerColor = localStorage.getItem('headerColor') || '#3498db'; // Default header color
+            const footerColor = localStorage.getItem('footerColor') || '#2c3e50'; // Default footer color
+            const sidebarColor = localStorage.getItem('sidebarColor') || '#2c3e50'; // Default sidebar color
+
+            // Apply settings to the page
+            document.querySelector('.right-sidebar').style.display = isSidebarVisible ? 'flex' : 'none';
+            document.getElementById('digitalClock').style.display = isClockVisible ? 'block' : 'none';
+            document.getElementById('sessionTimer').style.display = isTimerVisible ? 'block' : 'none';
+            document.body.style.backgroundColor = pageColor;
+
+            // Set header, footer, and sidebar colors
+            document.querySelector('header').style.backgroundColor = headerColor;
+            document.querySelector('footer').style.backgroundColor = footerColor;
+            document.querySelector('.right-sidebar').style.backgroundColor = sidebarColor; // Apply sidebar color
+
+            // Set the checkbox states to reflect the saved settings
+            document.getElementById('toggleSidebar').checked = isSidebarVisible;
+            document.getElementById('toggleClock').checked = isClockVisible;
+            document.getElementById('toggleTimer').checked = isTimerVisible;
+            document.getElementById('backgroundColor').value = pageColor;
+            document.getElementById('headerColor').value = headerColor;
+            document.getElementById('footerColor').value = footerColor;
+            document.getElementById('sidebarColor').value = sidebarColor; // Set sidebar color input
+        }
+
+        // Reset settings to default values
+        function resetSettings() {
+            localStorage.removeItem('sidebarVisible');
+            localStorage.removeItem('clockVisible');
+            localStorage.removeItem('timerVisible');
+            localStorage.removeItem('pageColor');
+            localStorage.removeItem('headerColor');
+            localStorage.removeItem('footerColor');
+            localStorage.removeItem('sidebarColor');
+
+            // Load the default settings after clearing localStorage
+            loadSettings();
+        }
+
+        // Hide the loader on page load
+        window.addEventListener('load', function () {
+            document.getElementById('pageLoader').style.display = 'none'; // Hide loader initially
+            loadSettings(); // Load settings from localStorage
+        });
+
+        // Toggle Settings Panel visibility
+        document.getElementById('settingsButton').addEventListener('click', function () {
+            const settingsPanel = document.getElementById('settingsPanel');
+            settingsPanel.style.display = settingsPanel.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Save Settings
+        document.getElementById('saveSettings').addEventListener('click', function () {
+            const isSidebarVisible = document.getElementById('toggleSidebar').checked;
+            const isClockVisible = document.getElementById('toggleClock').checked;
+            const isTimerVisible = document.getElementById('toggleTimer').checked;
+            const pageColor = document.getElementById('backgroundColor').value;
+            const headerColor = document.getElementById('headerColor').value;
+            const footerColor = document.getElementById('footerColor').value;
+            const sidebarColor = document.getElementById('sidebarColor').value;
+
+            // Toggle Sidebar visibility
+            document.querySelector('.right-sidebar').style.display = isSidebarVisible ? 'flex' : 'none';
+
+            // Toggle Digital Clock visibility
+            document.getElementById('digitalClock').style.display = isClockVisible ? 'block' : 'none';
+
+            // Toggle Session Timer visibility
+            document.getElementById('sessionTimer').style.display = isTimerVisible ? 'block' : 'none';
+
+            // Change Page Background Color
+            document.body.style.backgroundColor = pageColor;
+
+            // Change Header, Footer, and Sidebar Colors
+            document.querySelector('header').style.backgroundColor = headerColor;
+            document.querySelector('footer').style.backgroundColor = footerColor;
+            document.querySelector('.right-sidebar').style.backgroundColor = sidebarColor;
+
+            // Save settings to localStorage
+            localStorage.setItem('sidebarVisible', isSidebarVisible);
+            localStorage.setItem('clockVisible', isClockVisible);
+            localStorage.setItem('timerVisible', isTimerVisible);
+            localStorage.setItem('pageColor', pageColor);
+            localStorage.setItem('headerColor', headerColor);
+            localStorage.setItem('footerColor', footerColor);
+            localStorage.setItem('sidebarColor', sidebarColor);
+
+            // Hide settings panel after saving
+            document.getElementById('settingsPanel').style.display = 'none';
+        });
+
+        // Add event listener to the Reset Settings checkbox
+        document.getElementById('resetSettings').addEventListener('change', function () {
+            if (this.checked) {
+                resetSettings(); // Reset settings if checkbox is checked
+            }
+        });
+
+    </script>
+
+    <!-- Link to Bootstrap JS -->
+    <script src="~/Scripts/Bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 </html>
