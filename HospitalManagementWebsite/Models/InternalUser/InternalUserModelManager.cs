@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
@@ -17,12 +18,12 @@ namespace HospitalManagementWebsite.Models.InternalUser
         public (string passwordHash, int departmentCode) GetUserCredentialsByUsername(string username)
         {
             string passwordHash = string.Empty;
-            int departmentCode = -1;  // Default value for departmentCode in case no result is found
+            int departmentCode = -1;  // Default value for departmentCode if no result is found
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 // Query to get the password hash and department code for the provided username
-                string query = "SELECT INTPASSWORD, INTDEPARTMENTCODE FROM INTERNALUSERDETAILS WHERE ITNUSERNAME = @Username";
+                string query = "SELECT INTPASSWORD, INTDEPARTMENTCODE FROM INTERNALUSERDETAILS WHERE EMAIL = @Username";
 
                 SqlCommand cmd = new SqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@Username", username); // Use parameterized query to prevent SQL injection
@@ -35,8 +36,9 @@ namespace HospitalManagementWebsite.Models.InternalUser
                     // If a matching record is found, retrieve the password hash and department code
                     if (dr.Read())
                     {
-                        passwordHash = dr["INTPASSWORD"].ToString();
-                        departmentCode = Convert.ToInt32(dr["INTDEPARTMENTCODE"]);  // Ensure departmentCode is an integer
+                        // Handle potential DBNull values explicitly
+                        passwordHash = dr["INTPASSWORD"] != DBNull.Value ? dr["INTPASSWORD"].ToString() : string.Empty;
+                        departmentCode = dr["INTDEPARTMENTCODE"] != DBNull.Value ? Convert.ToInt32(dr["INTDEPARTMENTCODE"]) : -1;
                     }
                 }
                 catch (Exception ex)
@@ -76,54 +78,56 @@ namespace HospitalManagementWebsite.Models.InternalUser
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 // Insert the new internal user's registration data into the database
-                //string query = "INSERT INTO INTERNALUSERDETAILS (ITNUSERNAME, INTPASSWORD, INTDEPARTMENTCODE, INTDESIGNATIONCODE, " +
-                //               "INTFLGSTATUS, EMAIL, MOBILENO, DOB, EMPLOYEECODE, GENDER, DOJ,DOB ) " +
-                //               "VALUES (@ItnUsername, @IntPassword, @IntDepartmentCode, @IntDesignationCode, @IntFlgStatus, @Email, @MobileNo, " +
-                //               "@Dob, @EmployeeCode, @Gender, @Doj,@DoB)";
                 string query = "INSERT INTO INTERNALUSERDETAILS (" +
                     "ITNUSERNAME," +
                     " INTPASSWORD," +
                     " INTDEPARTMENTCODE," +
-                         "EMAIL, " +
-                         "MOBILENO," +
-                         " DOB," +
-                         " GENDER," +
-                         " DOJ ) " +
-                         "VALUES (" +
-                         "@ItnUsername," +
-                         " @IntPassword," +
-                         " @IntDepartmentCode, " +
-                         "@Email," +
-                         " @MobileNo, " +
-                         "@Dob," +
-                         " @Gender," +
-                         " @Doj" +
-                         ")";
+                    " EMAIL," +
+                    " MOBILENO," +
+                    " DOB," +
+                    " GENDER," +
+                    " DOJ ," +
+                    " INTDESIGNATIONCODE ," +
+                    " EMPLOYEECODE) " +
+                    "VALUES (" +
+                    "@ItnUsername," +
+                    "@IntPassword," +
+                    "@IntDepartmentCode," +
+                    "@Email," +
+                    "@MobileNo," +
+                    "@Dob," +
+                    "@Gender," +
+                    "@Doj," +
+                    "@INTDESIGNATIONCODE," +
+                    "@EMPLOYEECODE" +
+                    ")";
 
                 SqlCommand cmd = new SqlCommand(query, connection);
-                cmd.Parameters.AddWithValue("@ItnUsername", user.ITNUSERNAME);
-                cmd.Parameters.AddWithValue("@IntPassword", user.INTPASSWORD);
-                cmd.Parameters.AddWithValue("@IntDepartmentCode", user.INTDEPARTMENTCODE);
-                //cmd.Parameters.AddWithValue("@IntDesignationCode", user.INTDESIGNATIONCODE);
-                //cmd.Parameters.AddWithValue("@IntFlgStatus", user.INTFLGSTATUS);
-                cmd.Parameters.AddWithValue("@Email", user.EMAIL ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@MobileNo", user.MOBILENO ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@Dob", user.DOB ?? (object)DBNull.Value);
-                //cmd.Parameters.AddWithValue("@EmployeeCode", user.EMPLOYEECODE);
-                cmd.Parameters.AddWithValue("@Gender", user.GENDER);
-                cmd.Parameters.AddWithValue("@Doj", user.DOJ ?? (object)DBNull.Value);
-                //cmd.Parameters.AddWithValue("@ModuleId", user.MODULEID ?? (object)DBNull.Value);
+
+                // Add parameters explicitly with data types
+                cmd.Parameters.Add("@ItnUsername", SqlDbType.NVarChar).Value = user.ITNUSERNAME;
+                cmd.Parameters.Add("@IntDepartmentCode", SqlDbType.Int).Value = user.INTDEPARTMENTCODE;
+                cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = user.EMAIL ?? (object)DBNull.Value;
+                cmd.Parameters.Add("@MobileNo", SqlDbType.NVarChar).Value = user.MOBILENO ?? (object)DBNull.Value;
+                cmd.Parameters.Add("@Dob", SqlDbType.DateTime).Value = user.DOB ?? (object)DBNull.Value;
+                cmd.Parameters.Add("@Gender", SqlDbType.NVarChar).Value = user.GENDER;
+                cmd.Parameters.Add("@Doj", SqlDbType.DateTime).Value = user.DOJ ?? (object)DBNull.Value;
+
+                // Manually assign values for the fields that do not have data currently
+                cmd.Parameters.Add("@INTDESIGNATIONCODE", SqlDbType.Int).Value = 1;
+                cmd.Parameters.Add("@EMPLOYEECODE", SqlDbType.NVarChar).Value = "UNKNOWN";  // Example: default employee code (e.g., 'UNKNOWN')
 
                 // Check if the user is an admin (special case, no password hashing)
                 if (user.ITNUSERNAME.ToLower() == "admin@mail.com")
                 {
-                    cmd.Parameters.AddWithValue("@IntPassword", user.INTPASSWORD); // No hashing for admin
+                    // No hashing for admin, just pass the password directly
+                    cmd.Parameters.Add("@IntPassword", SqlDbType.NVarChar).Value = user.INTPASSWORD;
                 }
                 else
                 {
                     // Hash the password using SHA256 before storing it
                     string hashedPassword = HashPassword(user.INTPASSWORD);
-                    cmd.Parameters.AddWithValue("@IntPassword", hashedPassword);
+                    cmd.Parameters.Add("@IntPassword", SqlDbType.NVarChar).Value = hashedPassword;
                 }
 
                 try
@@ -134,12 +138,14 @@ namespace HospitalManagementWebsite.Models.InternalUser
                 }
                 catch (Exception ex)
                 {
-                    // Handle exceptions (optional: log the exception for debugging)
-                    Console.WriteLine(ex.Message);
+                    // Log the exception or handle it as needed
+                    Console.WriteLine("Error: " + ex.Message);
                     return 0; // Return 0 if there was an error
                 }
             }
         }
+
+
 
         // Method to hash the password using SHA256
         private string HashPassword(string password)

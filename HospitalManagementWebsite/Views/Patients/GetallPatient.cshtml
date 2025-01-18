@@ -4,51 +4,53 @@
 }
 
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
 <style>
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background-color: #f4f4f4;
         color: #333;
+        margin: 0;
+        padding: 0;
     }
 
-
-
-
-
-    .timer {
-        font-size: 16px;
-        font-weight: bold;
-    }
-
-    footer {
-        background-color: #3498db;
-        color: #fff;
+    h1 {
         text-align: center;
-        padding: 10px 20px;
         margin-top: 20px;
+        font-size: 24px;
     }
 
     #searchBox {
-        padding: 8px;
+        display: block;
+        width: 100%;
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 10px;
         font-size: 16px;
         border-radius: 4px;
         border: 1px solid #ddd;
-        margin-bottom: 20px;
+        background-color: #fff;
+        transition: all 0.3s;
     }
+
+        #searchBox:focus {
+            outline: none;
+            border-color: #3498db;
+        }
 
     table {
         width: 100%;
+        max-width: 1200px;
+        margin: 20px auto;
         border-collapse: collapse;
-        margin-top: 20px;
         background-color: #fff;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
 
     th, td {
-        border: 1px solid #ddd;
         padding: 10px;
         text-align: left;
+        border: 1px solid #ddd;
     }
 
     th {
@@ -70,7 +72,7 @@
         color: #fff;
         border-radius: 4px;
         cursor: pointer;
-        transition: background-color 0.3s;
+        transition: background-color 0.3s ease;
     }
 
         .page:hover {
@@ -94,8 +96,33 @@
             background-color: #3498db;
             color: #fff;
         }
-</style>
 
+    .add-patient-button {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+        .add-patient-button a {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+            .add-patient-button a:hover {
+                background-color: #297fb8;
+            }
+
+    footer {
+        background-color: #3498db;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        margin-top: 20px;
+    }
+</style>
 
 <h1>All Patients Details</h1>
 
@@ -137,15 +164,15 @@
             </tr>
         }
     </tbody>
-    <!-- Create Patient Button -->
-    <div class="add-patient-button">
-        <a href="https://localhost:44386/Patients/CreatePatient" class="btn btn-primary">
-            <i class="fas fa-plus-circle"></i> Create Patient
-        </a>
-    </div>
 </table>
 
 <div class="pagination" id="paginationControls"></div>
+
+<div class="add-patient-button">
+    <a href="https://localhost:44386/Patients/CreatePatient" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> Create Patient
+    </a>
+</div>
 
 <footer>
     &copy; 2024 - Hospital Management System
@@ -154,26 +181,25 @@
 <script>
     $(document).ready(function () {
         const rows = $("#patientData tr");
-        const rowsPerPage = 5; // Number of rows per page
-        let totalPages = Math.ceil(rows.length / rowsPerPage);
+        const rowsPerPage = 5; // Set default rows per page to 10
         let currentPage = 1;
+        let filteredRows = rows; // Initially, all rows are considered as filtered
 
         // Function to show the current page
         function showPage(page) {
-            rows.hide();
+            filteredRows.hide(); // Hide all rows first
             const start = (page - 1) * rowsPerPage;
             const end = start + rowsPerPage;
-            rows.slice(start, end).show();
+            filteredRows.slice(start, end).fadeIn(500); // Fade in effect for showing rows
 
             $(".page").removeClass("current-page");
             $(`#page-${page}`).addClass("current-page");
         }
 
-        // Function to create pagination
+        // Function to create pagination based on visible rows
         function createPagination() {
             $("#paginationControls").empty();
-            const visibleRows = $("#patientData tr:visible").length;
-            totalPages = Math.ceil(visibleRows / rowsPerPage); // Update total pages based on visible rows
+            const totalPages = Math.ceil(filteredRows.length / rowsPerPage); // Update total pages based on filtered rows
 
             if (totalPages > 0) {
                 for (let i = 1; i <= totalPages; i++) {
@@ -193,31 +219,29 @@
         function filterRows() {
             const searchTerm = $("#searchBox").val().toLowerCase();
 
-            // Start filtering only after 3 characters
-            if (searchTerm.length >= 3) {
-                rows.hide().filter(function () {
+            // Filter rows based on the search term
+            if (searchTerm.length >=3) {
+                filteredRows = rows.filter(function () {
                     const patientName = $(this).find("td:nth-child(2)").text().toLowerCase() + " " + $(this).find("td:nth-child(3)").text().toLowerCase();
                     const patientId = $(this).find("td:nth-child(1)").text().toLowerCase();
                     return patientName.includes(searchTerm) || patientId.includes(searchTerm); // Search by name or ID
-                }).show();
+                }).fadeIn(500); // Fade in the filtered rows
             } else {
-                // Show all rows if less than 3 characters are typed
-                rows.show();
+                filteredRows = rows; // If search term is less than 3 characters, show all rows
+                rows.fadeIn(500);
             }
 
             // After filtering, reset pagination to the first page
             currentPage = 1;
-            createPagination(); // Rebuild the pagination controls based on filtered rows
+            createPagination(); // Rebuild pagination controls based on filtered rows
             showPage(currentPage); // Show the first page after filtering
         }
 
         // Trigger filtering when typing in the search box
         $("#searchBox").on("input", filterRows);
 
-        // Initialize pagination and display first page
+        // Initialize pagination and display the first page with all data
         createPagination();
         showPage(currentPage);
     });
 </script>
-
-

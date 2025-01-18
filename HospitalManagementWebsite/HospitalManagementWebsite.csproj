@@ -193,6 +193,11 @@
     <Content Include="Content\Bootstrap\bootstrap.min.css" />
     <Content Include="Content\Bootstrap\bootstrap.rtl.css" />
     <Content Include="Content\Bootstrap\bootstrap.rtl.min.css" />
+    <Content Include="Media\Images\HMS_SLIDER %281%29.jpg" />
+    <Content Include="Media\Images\HMS_SLIDER %282%29.jpg" />
+    <Content Include="Media\Images\HMS_SLIDER %283%29.jpg" />
+    <Content Include="Media\Images\HMS_SLIDER %284%29.jpg" />
+    <Content Include="Media\Images\HMS_SLIDER %285%29.jpg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -263,6 +268,7 @@
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-3.7.1.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />

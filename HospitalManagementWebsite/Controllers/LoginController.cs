@@ -1,4 +1,5 @@
 ﻿using HospitalManagementWebsite.Models;
+using System;
 using System.Web.Mvc;
 
 namespace HospitalManagementWebsite.Controllers
@@ -22,24 +23,32 @@ namespace HospitalManagementWebsite.Controllers
             if (ModelState.IsValid)
             {
                 DoctorRegistrationModelManager modelManager = new DoctorRegistrationModelManager();
-
-                // Check user credentials using a method that retrieves the stored password hash
-                var storedHash = modelManager.GetPasswordHashByEmail(registration.Email);
-
-                // If a valid user is found and the password hashes match
-                if (!string.IsNullOrEmpty(storedHash) && BCrypt.Net.BCrypt.Verify(registration.Password, storedHash))
+                try
                 {
-                    // Store user data in session or set up authentication cookies as needed
-                    Session["UserEmail"] = registration.Email; // Example of session storage, can be changed as per your requirements
+                    // Check user credentials using a method that retrieves the stored password hash
+                    var storedHash = modelManager.GetPasswordHashByEmail(registration.Email);
 
-                    // Redirect to a protected page (like patient details)
-                    return RedirectToAction("GetAllPatient", "Patients");
+                    // If a valid user is found and the password hashes match
+                    if (!string.IsNullOrEmpty(storedHash) && BCrypt.Net.BCrypt.Verify(registration.Password, storedHash))
+                    {
+                        // Store user data in session or set up authentication cookies as needed
+                        Session["UserEmail"] = registration.Email; // Example of session storage, can be changed as per your requirements
+
+                        // Redirect to a protected page (like patient details)
+                        return RedirectToAction("GetAllPatient", "Patients");
+                    }
+                    else
+                    {
+                        // Show an error message if credentials are invalid
+                        ModelState.AddModelError("", "Invalid email or password.");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    // Show an error message if credentials are invalid
-                    ModelState.AddModelError("", "Invalid email or password.");
+                    return RedirectToAction("Login", "Login");
                 }
+
+               
             }
 
             return View(registration); // Return the login view with validation errors

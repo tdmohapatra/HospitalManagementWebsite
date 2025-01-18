@@ -69,7 +69,8 @@ namespace HospitalManagementWebsite.Controllers
                             // Optionally, you can store additional session data, such as user roles or department
 
                             // Redirect to a protected page (like Dashboard or home page)
-                            return RedirectToAction("Dashboard", "Home");
+                            return RedirectToAction("GetAllPatient", "Patients");
+
                         }
                         else
                         {
@@ -92,6 +93,7 @@ namespace HospitalManagementWebsite.Controllers
 
             // Return the login view with validation errors
             return View(user);
+            
         }
 
 
